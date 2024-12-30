@@ -26,7 +26,7 @@
 
         /* Vùng bọc nội dung chính */
         .container {
-            max-width: 1000px; /* Tăng max-width từ 800px lên 1200px */
+            max-width: 1000px; /* Tăng max-width từ 800px lên 1000px hoặc 1200px tuỳ ý */
             width: 90%; /* Đảm bảo container chiếm 90% chiều rộng màn hình */
             margin: 0 auto;
             background: #fff;
@@ -50,50 +50,47 @@
         #tableSchedule {
             border-collapse: collapse;
             width: 100%;
-            /* Nếu muốn cho bảng to hơn chiều rộng container,
-               set min-width cho nó để luôn có scroll ngang
-            */
             min-width: 1000px; /* Tăng min-width để bảng rộng hơn */
         }
 
         #tableSchedule th, #tableSchedule td {
             border: 1px solid #ddd;
-            min-width: 120px; /* Tăng min-width từ 80px lên 120px */
-            padding: 12px; /* Tăng padding từ 8px lên 12px */
+            min-width: 120px; 
+            padding: 12px; 
             text-align: center;
-            font-size: 18px; /* Tăng kích thước font nếu cần */
+            font-size: 18px; 
         }
 
         /* Tiêu đề label */
         label {
-            font-size: 18px; /* Tăng kích thước font từ 16px lên 18px */
+            font-size: 18px; 
             font-weight: 500;
         }
 
         /* Ô nhập dữ liệu */
         input[type="number"] {
-            font-size: 18px; /* Tăng kích thước font từ 16px lên 18px */
-            padding: 6px; /* Tăng padding từ 4px lên 6px */
-            margin: 6px 12px 6px 0; /* Tăng margin để cân bằng */
-            width: 100px; /* Tăng width từ 80px lên 100px */
+            font-size: 18px;
+            padding: 6px; 
+            margin: 6px 12px 6px 0; 
+            width: 100px; 
         }
 
         /* Checkbox */
         input[type="checkbox"] {
-            transform: scale(1.4); /* Phóng to checkbox từ 1.2 lên 1.4 */
-            margin-right: 10px; /* Tăng margin để cân bằng */
+            transform: scale(1.4); 
+            margin-right: 10px; 
             cursor: pointer;
         }
 
         /* Khu vực các nút bấm */
         .btn-group {
-            margin-top: 20px; /* Tăng margin từ 16px lên 20px */
+            margin-top: 20px; 
         }
 
         button {
-            font-size: 18px; /* Tăng kích thước font từ 16px lên 18px */
-            padding: 10px 20px; /* Tăng padding từ 8px 16px lên 10px 20px */
-            margin-right: 10px; /* Tăng margin từ 8px lên 10px */
+            font-size: 18px; 
+            padding: 10px 20px; 
+            margin-right: 10px; 
             cursor: pointer;
             border: none;
             border-radius: 4px;
@@ -110,8 +107,8 @@
         #lblCurrentTime,
         #lblCurrentStatus,
         #lblNextStatus {
-            margin-top: 16px; /* Tăng margin từ 12px lên 16px */
-            font-size: 18px; /* Tăng kích thước font từ 16px lên 18px */
+            margin-top: 16px; 
+            font-size: 18px; 
             color: #555;
         }
 
@@ -127,18 +124,9 @@
             background-color: #f0f0f0;
             border-bottom: 2px solid #ccc;
             font-weight: 600;
-            font-size: 18px; /* Tăng kích thước font từ mặc định lên 18px */
+            font-size: 18px; 
         }
 
-        #tableSchedule th,
-        #tableSchedule td {
-            border: 1px solid #ddd;
-            padding: 12px; /* Tăng padding từ 10px lên 12px */
-            text-align: center;
-            min-width: 120px; /* Tăng min-width từ 80px lên 120px */
-        }
-
-        /* Hiệu ứng hover cho từng dòng trong bảng */
         #tableSchedule tr:hover {
             background-color: #fafafa;
         }
@@ -157,10 +145,38 @@
             background-color: yellow;
         }
 
+        /* Khối điều chỉnh âm lượng */
+        .volume-control {
+            margin: 20px 0;
+        }
+        .volume-control label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .volume-control input[type="range"] {
+            width: 200px;
+            vertical-align: middle;
+        }
+        .volume-control button {
+            margin-left: 10px;
+            font-size: 16px;
+            vertical-align: middle;
+        }
     </style>
 </head>
+<body>
+
+    <h1>Tạo Lịch Hút TPCG</h1>
+
     <!-- Âm báo -->
     <audio id="alarmAudio" src="alarm_sound.mp3" preload="auto"></audio>
+
+    <!-- Khối điều khiển âm lượng (thanh trượt + nút Mute/Unmute) -->
+    <div class="volume-control">
+        <label for="volumeSlider">Âm lượng:</label>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+        <button id="muteBtn">Mute</button>
+    </div>
 
     <!-- Favicon cho các trình duyệt -->
     <link rel="icon" href="favicon.ico">
@@ -171,13 +187,11 @@
     <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
 
-    <h1>Tạo Lịch Hút TPCG</h1>
-
     <div class="container">
         <!-- Khu vực nhập thông tin -->
         <div>
             <label for="numSamples">Số lượng mẫu:</label>
-            <input type="number" id="numSamples" min="1" placeholder="Số mẫu"/>
+            <input type="number" id="numSamples" min="1" placeholder="Nhập số lượng mẫu"/>
 
             <br><br>
 
@@ -205,27 +219,47 @@
         <div id="lblCurrentStatus">Trạng thái hiện tại: Không có</div>
         <div id="lblNextStatus">Trạng thái tiếp theo: Không có</div>
 
-             <div class="table-wrapper">  <!-- Bảng lịch -->
-         <table id="tableSchedule">
-            <!-- Sẽ được tạo động trong JavaScript -->
-        </table>
-                    </div>
+        <div class="table-wrapper">
+            <table id="tableSchedule">
+                <!-- Sẽ được tạo động trong JavaScript -->
+            </table>
+        </div>
     </div>
+
     <script>
         /*****************************************************
-         * Phần JS mô phỏng lại logic PyQt5
+         * Điều khiển volume & Mute/Unmute
          *****************************************************/
+        const alarmAudioEl = document.getElementById('alarmAudio');
+        const volumeSliderEl = document.getElementById('volumeSlider');
+        const muteBtnEl = document.getElementById('muteBtn');
 
-                // Lắng nghe sự thay đổi giá trị giờ và phút
+        // Lắng nghe thanh trượt âm lượng
+        volumeSliderEl.addEventListener('input', function() {
+            alarmAudioEl.volume = parseFloat(this.value);
+        });
+
+        // Nút Mute/Unmute
+        muteBtnEl.addEventListener('click', function() {
+            alarmAudioEl.muted = !alarmAudioEl.muted;
+            if (alarmAudioEl.muted) {
+                muteBtnEl.textContent = "Unmute";
+            } else {
+                muteBtnEl.textContent = "Mute";
+            }
+        });
+
+        /*****************************************************
+         * Phần JS mô phỏng lại logic PyQt5 ban đầu
+         *****************************************************/
+        // Lắng nghe sự thay đổi giá trị giờ và phút
         const hourInput = document.getElementById('startHour');
         const minuteInput = document.getElementById('startMinute');
 
-        // Hàm điều chỉnh giờ và phút
         function adjustTime() {
             let hour = parseInt(hourInput.value);
             let minute = parseInt(minuteInput.value);
 
-            // Điều chỉnh phút khi ra ngoài phạm vi 0-59
             if (minute < 0) {
                 minute += 60;  // Giảm 1 giờ
                 hour -= 1;
@@ -234,31 +268,23 @@
                 hour += 1;
             }
 
-            // Điều chỉnh giờ khi ra ngoài phạm vi 0-23
             if (hour < 0) {
                 hour = 23;
             } else if (hour >= 24) {
                 hour = 0;
             }
 
-            // Cập nhật lại giá trị vào input
             hourInput.value = hour;
             minuteInput.value = minute;
         }
 
-        // Gán sự kiện thay đổi cho cả hai input
         hourInput.addEventListener('change', adjustTime);
         minuteInput.addEventListener('change', adjustTime);
 
         // Biến lưu trữ cấu trúc lịch dưới dạng mảng 2 chiều
-        // Tương đương với schedule_df bên PyQt (DataFrame)
         let scheduleData = [];
-        // Mỗi cột tương ứng 1 mẫu, mỗi hàng là 1 giai đoạn (theo thứ tự)
-
-        // Cờ đánh dấu đã tạo lịch hay chưa
         let isScheduleCreated = false;
 
-        // Danh sách tên các giai đoạn (index DataFrame)
         const stages = [
             "Bắt đầu phân tán",
             "Phân tán P1",
@@ -270,7 +296,7 @@
             "Hút cấp sét"
         ];
 
-        // Các ô muốn hiển thị trên bảng chính (như code gốc)
+        // Các hàng cần hiển thị
         const filteredRows = [0, 3, 4, 5, 6, 7];
         const rowLabels   = [
             "Bắt đầu phân tán",
@@ -281,7 +307,6 @@
             "Hút cấp sét",
         ];
 
-        // Lấy phần tử HTML
         const numSamplesEl    = document.getElementById('numSamples');
         const startHourEl     = document.getElementById('startHour');
         const startMinuteEl   = document.getElementById('startMinute');
@@ -294,17 +319,14 @@
         const lblCurrentStatusEl = document.getElementById('lblCurrentStatus');
         const lblNextStatusEl    = document.getElementById('lblNextStatus');
         const tableScheduleEl    = document.getElementById('tableSchedule');
-        const alarmAudioEl       = document.getElementById('alarmAudio');
 
         /*****************************************************
-         * Hàm tiện ích xử lý Date trong JS
+         * Hàm tiện ích xử lý Date
          *****************************************************/
-        // Lấy đối tượng Date hiện tại (client)
         function getNowDate() {
             return new Date();
         }
 
-        // Trả về chuỗi "HH:MM - dd/MM/yyyy"
         function formatFullDate(dateObj) {
             let H  = String(dateObj.getHours()).padStart(2, '0');
             let M  = String(dateObj.getMinutes()).padStart(2, '0');
@@ -314,19 +336,16 @@
             return `${H}:${M} - ${dd}/${mm}/${yyyy}`;
         }
 
-        // Trả về chuỗi "HH:MM"
         function formatHourMinute(dateObj) {
             let H = String(dateObj.getHours()).padStart(2, '0');
             let M = String(dateObj.getMinutes()).padStart(2, '0');
             return `${H}:${M}`;
         }
 
-        // Dùng để cộng phút
         function addMinutes(dateObj, minutes) {
             return new Date(dateObj.getTime() + minutes * 60000);
         }
 
-        // So sánh dateObj có “bằng” giờ/phút/giây/ngày/tháng/năm với now hay không
         function isSameDateTime(d1, d2) {
             return (
                 d1.getFullYear() === d2.getFullYear() &&
@@ -339,7 +358,7 @@
         }
 
         /*****************************************************
-         * Hàm mô phỏng tính toán thời gian cho từng giai đoạn
+         * Hàm mô phỏng tính toán thời gian
          *****************************************************/
         function calculatePhanTanTimes(startTime) {
             let p1  = addMinutes(startTime, 1);
@@ -358,24 +377,20 @@
         }
 
         function generateSampleSchedule(startTime, isTrungTg) {
-            // Tính ra p1, p2, xong
             let [p1, p2, pxong] = calculatePhanTanTimes(startTime);
             let hutTimes = calculateHutTimes(pxong);
 
-            // Mô phỏng logic cũ: sau khi tạo xong 1 sample,
-            // start_time mới = start_time + 4 phút nếu trungtg, ngược lại = + 6
             let nextStartTime = addMinutes(startTime, (isTrungTg ? 4 : 6));
 
-            // Trả về mảng 8 cột (theo thứ tự stages)
             let arr = [
-                formatFullDate(startTime),         // Bắt đầu phân tán
-                formatFullDate(p1),               // Phân tán P1
-                formatFullDate(p2),               // Phân tán P2
-                formatFullDate(pxong),            // Phân tán xong
-                formatFullDate(hutTimes.hut_sa),  // Hút hạt cát
-                formatFullDate(hutTimes.hut_lt),  // Hút limon thô
-                formatFullDate(hutTimes.hut_lm),  // Hút limon mịn
-                formatFullDate(hutTimes.hut_s)    // Hút cấp sét
+                formatFullDate(startTime),
+                formatFullDate(p1),
+                formatFullDate(p2),
+                formatFullDate(pxong),
+                formatFullDate(hutTimes.hut_sa),
+                formatFullDate(hutTimes.hut_lt),
+                formatFullDate(hutTimes.hut_lm),
+                formatFullDate(hutTimes.hut_s)
             ];
 
             return [arr, nextStartTime];
@@ -385,20 +400,14 @@
          * Hàm tạo lịch
          *****************************************************/
         function createSchedule() {
-            // Đọc input
             let numsOfSample = parseInt(numSamplesEl.value) || 0;
             let sHour = parseInt(startHourEl.value) || 0;
             let sMin  = parseInt(startMinuteEl.value) || 0;
             let isTrungTg = chkTrungTgEl.checked;
 
-            // Lấy ngày hiện tại
             let now = getNowDate();
-            // Xây date start (lấy ngày/tháng/năm của now, nhưng giờ và phút do người dùng nhập)
             let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
 
-            // Mảng scheduleData:
-            // => scheduleData[r][c] = "HH:MM - dd/MM/yyyy" (r là row, c là sample)
-            // Ta sẽ build tạm dưới dạng "list of columns"
             let results = [];
             let tempTime = startTime;
 
@@ -409,7 +418,6 @@
             }
 
             if (results.length === 0) {
-                // Không tạo lịch
                 isScheduleCreated = false;
                 scheduleData = [];
                 renderScheduleTable();
@@ -418,12 +426,6 @@
                 return;
             }
 
-            // scheduleData là mảng 2 chiều:
-            // - rows = 8 (stages),
-            // - cols = số mẫu
-            // => Transpose
-            // results = [col0, col1, ...], mỗi col là 8 phần tử
-            // scheduleData[r][c] = results[c][r]
             let rowCount = stages.length;
             let colCount = results.length;
 
@@ -439,17 +441,15 @@
         }
 
         /*****************************************************
-         * Hàm hiển thị bảng schedule (tương tự update_table_display)
+         * Hàm hiển thị bảng schedule
          *****************************************************/
         function renderScheduleTable() {
-            // Xóa sạch nội dung cũ
             tableScheduleEl.innerHTML = "";
 
             if (!isScheduleCreated || scheduleData.length === 0) {
                 return;
             }
 
-            // Tạo header
             let colCount = scheduleData[0].length;
             let thead = document.createElement('thead');
             let trHead = document.createElement('tr');
@@ -464,24 +464,18 @@
             }
             thead.appendChild(trHead);
 
-            // Tạo body
             let tbody = document.createElement('tbody');
             for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
                 let actualRow = filteredRows[rIndex];
                 let tr = document.createElement('tr');
-
-                // Tên giai đoạn (dùng rowLabels hiển thị)
                 let tdLabel = document.createElement('td');
                 tdLabel.textContent = rowLabels[rIndex];
                 tr.appendChild(tdLabel);
 
                 for (let c = 0; c < colCount; c++) {
                     let td = document.createElement('td');
-                    // Lấy chuỗi dạng "HH:MM - dd/MM/yyyy"
                     let fullTimeStr = scheduleData[actualRow][c];
-                    // Parse ra Date object
                     let dateObj = parseFullTimeString(fullTimeStr);
-                    // Hiển thị rút gọn "HH:MM"
                     if (dateObj) {
                         td.textContent = formatHourMinute(dateObj);
                     } else {
@@ -489,7 +483,6 @@
                     }
                     tr.appendChild(td);
                 }
-
                 tbody.appendChild(tr);
             }
 
@@ -497,13 +490,11 @@
             tableScheduleEl.appendChild(tbody);
         }
 
-        // Hàm parse "HH:MM - dd/MM/yyyy" thành Date object
         function parseFullTimeString(str) {
-            // Ví dụ: "09:30 - 29/12/2024"
             let parts = str.split(" - ");
             if (parts.length !== 2) return null;
-            let hm = parts[0]; // "09:30"
-            let dmy = parts[1]; // "29/12/2024"
+            let hm = parts[0];
+            let dmy = parts[1];
 
             let hmArr = hm.split(":");
             if (hmArr.length !== 2) return null;
@@ -513,46 +504,33 @@
             let dmyArr = dmy.split("/");
             if (dmyArr.length !== 3) return null;
             let dd = parseInt(dmyArr[0]);
-            let mm = parseInt(dmyArr[1]) - 1; // tháng trong JS là 0-11
+            let mm = parseInt(dmyArr[1]) - 1;
             let yyyy = parseInt(dmyArr[2]);
 
             return new Date(yyyy, mm, dd, H, M);
         }
 
         /*****************************************************
-         * Hàm cập nhật các phần tử giao diện mỗi giây
+         * Cập nhật UI mỗi giây
          *****************************************************/
         function updateUIEverySecond() {
-            // Cập nhật nhãn thời gian hiện tại
             let now = getNowDate();
             lblCurrentTimeEl.textContent = "Thời gian hiện tại: " +
                 now.toLocaleTimeString('vi-VN', { hour12: false });
 
             if (!isScheduleCreated) return;
-
-            // Cập nhật tô màu bảng
             updateTableColor(now);
-
-            // Cập nhật trạng thái hiện tại
             updateCurrentStage(now);
-
-            // Cập nhật trạng thái tiếp theo
             updateNextStage(now);
-
-            // Kiểm tra báo thức
             checkAlarm(now);
         }
 
-        // Tô màu bảng (logic giống update_table_display)
         function updateTableColor(now) {
             if (!isScheduleCreated) return;
-            let rowCount = scheduleData.length; // 8
+            let rowCount = scheduleData.length; 
             let colCount = rowCount === 0 ? 0 : scheduleData[0].length;
-            // Tìm top 3 stage tương lai
             let futureStages = [];
-            // futureStages: [ { rowIdx, colIdx, dateObj }, ...]
 
-            // Lấy <tbody> con, bỏ qua row header
             let trs = tableScheduleEl.getElementsByTagName('tbody')[0]?.getElementsByTagName('tr') || [];
 
             for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
@@ -562,7 +540,6 @@
                     let dateObj = parseFullTimeString(cellValue);
 
                     if (dateObj && dateObj > now) {
-                        // push
                         futureStages.push({
                             rowIdx: rIndex,
                             colIdx: c,
@@ -571,13 +548,10 @@
                     }
                 }
             }
-            // Sắp xếp
-            futureStages.sort((a, b) => a.dateObj - b.dateObj);
 
-            // Lấy 3 stage sắp tới
+            futureStages.sort((a, b) => a.dateObj - b.dateObj);
             let next3 = futureStages.slice(0, 3);
 
-            // next3[0] => orange, next3[1..] => yellow
             let orangeStage = (next3.length > 0) ? {r: next3[0].rowIdx, c: next3[0].colIdx} : null;
             let yellowStages = new Set();
             if (next3.length > 1) {
@@ -586,24 +560,20 @@
                 }
             }
 
-            // Vòng lặp hiển thị
             for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
                 let tr = trs[rIndex];
                 let actualRow = filteredRows[rIndex];
                 let tds = tr.getElementsByTagName('td');
-                // tds[0] là label, tds[1..] là cột data
                 for (let c = 1; c <= colCount; c++) {
                     let td = tds[c];
                     if (!td) continue;
                     let cellValue = scheduleData[actualRow][c-1];
                     let dateObj = parseFullTimeString(cellValue);
 
-                    // clear class
                     td.className = "";
 
                     if (dateObj) {
                         if (dateObj <= now) {
-                            // Nếu đã qua >60s => lightgray, còn trong vòng <60s => lightgreen
                             let diffSec = (now - dateObj) / 1000;
                             if (diffSec >= 60) {
                                 td.classList.add('lightgray');
@@ -611,7 +581,6 @@
                                 td.classList.add('lightgreen');
                             }
                         } else {
-                            // future
                             if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c-1)) {
                                 td.classList.add('orange');
                             } else if (yellowStages.has(`${rIndex},${c-1}`)) {
@@ -623,58 +592,45 @@
             }
         }
 
-        // Hiển thị giai đoạn “hiện tại”
-function updateCurrentStage(now) {
-    let matching = [];
+        function updateCurrentStage(now) {
+            let matching = [];
+            if (!scheduleData.length) {
+                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
+                return;
+            }
 
-    if (!scheduleData.length) {
-        lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
-        return;
-    }
+            let rowCount = scheduleData.length;
+            let colCount = scheduleData[0].length;
 
-    let rowCount = scheduleData.length;        // 8 (các stages)
-    let colCount = scheduleData[0].length;     // số mẫu
-
-    for (let c = 0; c < colCount; c++) {
-        let sampleName = `Mẫu ${c + 1}`;
-        for (let r = 0; r < rowCount; r++) {
-            let fullTimeStr = scheduleData[r][c];
-            let dateObj = parseFullTimeString(fullTimeStr);
-
-            // Nếu parse được Date thành công
-            if (dateObj) {
-                // Kiểm tra nếu dateObj <= now và nằm trong khoảng 60s tính từ now
-                if (dateObj <= now) {
-                    let diffSec = (now - dateObj) / 1000;  // tính ra số giây
-                    if (diffSec <= 60) {
-                        // Lấy tên giai đoạn
-                        let stageName = stages[r];
-
-                        // Nếu stageName là "Phân tán P1" hoặc "Phân tán P2", gán là "Đang phân tán"
-                        if (["Phân tán P1", "Phân tán P2"].includes(stageName)) {
-                            stageName = "Đang phân tán";
+            for (let c = 0; c < colCount; c++) {
+                let sampleName = `Mẫu ${c + 1}`;
+                for (let r = 0; r < rowCount; r++) {
+                    let fullTimeStr = scheduleData[r][c];
+                    let dateObj = parseFullTimeString(fullTimeStr);
+                    if (dateObj) {
+                        if (dateObj <= now) {
+                            let diffSec = (now - dateObj) / 1000;
+                            if (diffSec <= 60) {
+                                let stageName = stages[r];
+                                if (["Phân tán P1", "Phân tán P2"].includes(stageName)) {
+                                    stageName = "Đang phân tán";
+                                }
+                                matching.push(`${stageName} - ${sampleName}`);
+                            }
                         }
-
-                        // Tuỳ ý bạn đặt nội dung hiển thị
-                        matching.push(`${stageName} - ${sampleName}`);
                     }
                 }
             }
+
+            if (matching.length > 0) {
+                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: " + matching.join(", ");
+            } else {
+                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
+            }
         }
-    }
 
-    if (matching.length > 0) {
-        lblCurrentStatusEl.textContent = "Trạng thái hiện tại: " + matching.join(", ");
-    } else {
-        lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
-    }
-}
-
-
-        // Hiển thị 3 giai đoạn “tiếp theo”
         function updateNextStage(now) {
             let nextArr = [];
-
             if (!scheduleData.length) {
                 lblNextStatusEl.textContent = "Trạng thái tiếp theo: Không có";
                 return;
@@ -690,7 +646,6 @@ function updateCurrentStage(now) {
                     let dateObj = parseFullTimeString(fullTimeStr);
                     if (dateObj && dateObj > now) {
                         let stageName = stages[r];
-                        // Bỏ qua P1, P2
                         if (stageName !== "Phân tán P1" && stageName !== "Phân tán P2") {
                             let diffSec = (dateObj - now) / 1000;
                             if (diffSec < 60) {
@@ -709,7 +664,6 @@ function updateCurrentStage(now) {
                     }
                 }
             }
-            // Sắp xếp
             nextArr.sort((a, b) => a.dateObj - b.dateObj);
             nextArr = nextArr.slice(0, 3).map(item => item.text);
 
@@ -720,7 +674,6 @@ function updateCurrentStage(now) {
             }
         }
 
-        // Kiểm tra báo thức
         function checkAlarm(now) {
             if (!scheduleData.length) return;
 
@@ -730,13 +683,10 @@ function updateCurrentStage(now) {
             for (let c = 0; c < colCount; c++) {
                 for (let r = 0; r < rowCount; r++) {
                     let stageName = stages[r];
-                    // Bỏ qua P1, P2
                     if (stageName === "Phân tán P1" || stageName === "Phân tán P2") continue;
-
                     let fullTimeStr = scheduleData[r][c];
                     let dateObj = parseFullTimeString(fullTimeStr);
                     if (dateObj && isSameDateTime(dateObj, now)) {
-                        // phát âm thanh
                         playSound();
                         return;
                     }
@@ -745,8 +695,6 @@ function updateCurrentStage(now) {
         }
 
         function playSound() {
-            // Phát âm thanh trong 5 giây,
-            // ở đây ta chỉ play ngắn. Muốn dừng thì cắt file mp3 ngắn hoặc dùng logic phức tạp hơn.
             alarmAudioEl.currentTime = 0;
             alarmAudioEl.play();
             setTimeout(() => {
@@ -755,9 +703,6 @@ function updateCurrentStage(now) {
             }, 5000);
         }
 
-        /*****************************************************
-         * Xử lý các nút bấm
-         *****************************************************/
         btnGetTimeEl.addEventListener('click', () => {
             let now = getNowDate();
             startHourEl.value   = now.getHours();
@@ -769,13 +714,11 @@ function updateCurrentStage(now) {
         });
 
         btnResetEl.addEventListener('click', () => {
-            // Reset input
             numSamplesEl.value  = 0;
             startHourEl.value   = 0;
             startMinuteEl.value = 0;
             chkTrungTgEl.checked = false;
 
-            // Reset bảng & label
             scheduleData = [];
             isScheduleCreated = false;
             renderScheduleTable();
@@ -783,9 +726,7 @@ function updateCurrentStage(now) {
             lblNextStatusEl.textContent    = "Trạng thái tiếp theo: Không có";
         });
 
-        /*****************************************************
-         * Cập nhật UI mỗi giây
-         *****************************************************/
         setInterval(updateUIEverySecond, 1000);
     </script>
+</body>
 </html>
