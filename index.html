@@ -312,6 +312,7 @@
             muteBtn: document.getElementById('muteBtn'),
             numSamples: document.getElementById('numSamples'),
             timePicker: document.getElementById('timePicker'),
+            ampmDisplay: document.querySelector('.ampm-display'),
             chkTrungTg: document.getElementById('chkTrungTg'),
             btnGetTime: document.getElementById('btnGetCurrentTime'),
             btnCreate: document.getElementById('btnCreateSchedule'),
@@ -339,6 +340,15 @@
         /*****************************************************
          * Phần JS mô phỏng lại logic PyQt5 ban đầu
          *****************************************************/
+        function updateAMPMDisplay() {
+            const timeValue = elements.timePicker.value;
+            if (!timeValue) return;
+            
+            const [hours] = timeValue.split(':').map(num => parseInt(num));
+            elements.ampmDisplay.textContent = hours >= 12 ? 'PM' : 'AM';
+        }
+    
+        
         function adjustTime() {
             let hour = parseInt(elements.startHour.value) || 0;
             let minute = parseInt(elements.startMinute.value) || 0;
@@ -359,7 +369,7 @@
 
         elements.startHour.addEventListener('change', adjustTime);
         elements.startMinute.addEventListener('change', adjustTime);
-
+        elements.timePicker.addEventListener('change', updateAMPMDisplay);
         /*****************************************************
          * Hàm tiện ích xử lý Date
          *****************************************************/
