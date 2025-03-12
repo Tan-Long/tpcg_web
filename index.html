@@ -2,9 +2,18 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo Lịch Hút TPCG</title>
     <style>
-        /* Thiết lập font chữ và khoảng cách chung */
+        :root {
+            --primary-color: #007BFF;
+            --primary-hover: #0056b3;
+            --background-color: #f7f9fa;
+            --border-color: #ddd;
+            --text-color: #333;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,36 +22,35 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f9fa; /* Màu nền nhẹ */
+            background-color: var(--background-color);
             margin: 0;
             padding: 20px;
+            line-height: 1.5;
         }
 
         h1 {
-            color: #333;
+            color: var(--text-color);
             text-align: center;
             margin-bottom: 30px;
         }
 
-        /* Vùng bọc nội dung chính */
         .container {
-            max-width: 1000px; /* Tăng max-width từ 800px lên 1000px hoặc 1200px tuỳ ý */
-            width: 90%; /* Đảm bảo container chiếm 90% chiều rộng màn hình */
+            max-width: 1000px;
+            width: 90%;
             margin: 0 auto;
             background: #fff;
             border-radius: 8px;
-            padding: 30px; /* Tăng padding để tạo khoảng cách lớn hơn */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-shadow: var(--shadow);
         }
 
         .table-wrapper {
             width: 100%;
-            max-height: 900px; /* Tăng max-height nếu cần thiết */
-            overflow-x: auto;
-            overflow-y: auto;
+            max-height: 900px;
+            overflow: auto;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             margin-top: 20px;
             background: #fff;
         }
@@ -50,74 +58,67 @@
         #tableSchedule {
             border-collapse: collapse;
             width: 100%;
-            min-width: 1000px; /* Tăng min-width để bảng rộng hơn */
+            min-width: 1000px;
         }
 
         #tableSchedule th, #tableSchedule td {
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             min-width: 120px; 
             padding: 12px; 
             text-align: center;
             font-size: 18px; 
         }
 
-        /* Tiêu đề label */
         label {
             font-size: 18px; 
             font-weight: 500;
+            display: inline-block;
+            margin-bottom: 6px;
         }
 
-        /* Ô nhập dữ liệu */
         input[type="number"] {
             font-size: 18px;
             padding: 6px; 
             margin: 6px 12px 6px 0; 
-            width: 100px; 
+            width: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
-        /* Checkbox */
         input[type="checkbox"] {
             transform: scale(1.4); 
             margin-right: 10px; 
             cursor: pointer;
         }
 
-        /* Khu vực các nút bấm */
         .btn-group {
             margin-top: 20px; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         button {
             font-size: 18px; 
             padding: 10px 20px; 
-            margin-right: 10px; 
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            background-color: #007BFF;
+            background-color: var(--primary-color);
             color: #fff;
             transition: background-color 0.2s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-hover);
         }
 
-        /* Khu vực hiển thị thời gian, trạng thái */
         #lblCurrentTime,
         #lblCurrentStatus,
         #lblNextStatus {
             margin-top: 16px; 
             font-size: 18px; 
             color: #555;
-        }
-
-        /* Bảng lịch */
-        #tableSchedule {
-            border-collapse: collapse;
-            margin-top: 20px;
-            width: 100%;
-            overflow-x: auto;
         }
 
         #tableSchedule th {
@@ -131,36 +132,46 @@
             background-color: #fafafa;
         }
 
-        /* Các class trạng thái khác nhau */
-        .lightgray {
-            background-color: lightgray;
-        }
-        .lightgreen {
-            background-color: lightgreen;
-        }
-        .orange {
-            background-color: orange;
-        }
-        .yellow {
-            background-color: yellow;
-        }
+        .lightgray { background-color: lightgray; }
+        .lightgreen { background-color: lightgreen; }
+        .orange { background-color: orange; }
+        .yellow { background-color: yellow; }
 
-        /* Khối điều chỉnh âm lượng */
         .volume-control {
             margin: 20px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
+
         .volume-control label {
             margin-right: 10px;
             font-weight: bold;
         }
+
         .volume-control input[type="range"] {
             width: 200px;
-            vertical-align: middle;
+            margin-right: 10px;
         }
-        .volume-control button {
-            margin-left: 10px;
-            font-size: 16px;
-            vertical-align: middle;
+
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            input[type="number"] {
+                width: 80px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -170,8 +181,6 @@
 
     <!-- Âm báo -->
     <audio id="alarmAudio" src="alarm_sound.mp3" preload="auto"></audio>
-
-
 
     <!-- Favicon cho các trình duyệt -->
     <link rel="icon" href="favicon.ico">
@@ -192,9 +201,9 @@
 
             <label>Thời gian bắt đầu:</label>
             <br>
-            <label>Giờ:</label>
+            <label for="startHour">Giờ:</label>
             <input type="number" id="startHour" min="-1" max="24" placeholder="00-23" />
-            <label>Phút:</label>
+            <label for="startMinute">Phút:</label>
             <input type="number" id="startMinute" min="-1" max="60" placeholder="00-59" />
 
             <br><br>
@@ -209,7 +218,7 @@
             </div>
         </div>
         
-            <!-- Khối điều khiển âm lượng (thanh trượt + nút Mute/Unmute) -->
+        <!-- Khối điều khiển âm lượng (thanh trượt + nút Mute/Unmute) -->
         <div class="volume-control">
             <label for="volumeSlider">Âm lượng chuông báo:</label>
             <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
@@ -229,65 +238,9 @@
     </div>
 
     <script>
-        /*****************************************************
-         * Điều khiển volume & Mute/Unmute
-         *****************************************************/
-        const alarmAudioEl = document.getElementById('alarmAudio');
-        const volumeSliderEl = document.getElementById('volumeSlider');
-        const muteBtnEl = document.getElementById('muteBtn');
-
-        // Lắng nghe thanh trượt âm lượng
-        volumeSliderEl.addEventListener('input', function() {
-            alarmAudioEl.volume = parseFloat(this.value);
-        });
-
-        // Nút Mute/Unmute
-        muteBtnEl.addEventListener('click', function() {
-            alarmAudioEl.muted = !alarmAudioEl.muted;
-            if (alarmAudioEl.muted) {
-                muteBtnEl.textContent = "Unmute";
-            } else {
-                muteBtnEl.textContent = "Mute";
-            }
-        });
-
-        /*****************************************************
-         * Phần JS mô phỏng lại logic PyQt5 ban đầu
-         *****************************************************/
-        // Lắng nghe sự thay đổi giá trị giờ và phút
-        const hourInput = document.getElementById('startHour');
-        const minuteInput = document.getElementById('startMinute');
-
-        function adjustTime() {
-            let hour = parseInt(hourInput.value);
-            let minute = parseInt(minuteInput.value);
-
-            if (minute < 0) {
-                minute += 60;  // Giảm 1 giờ
-                hour -= 1;
-            } else if (minute >= 60) {
-                minute -= 60;  // Tăng 1 giờ
-                hour += 1;
-            }
-
-            if (hour < 0) {
-                hour = 23;
-            } else if (hour >= 24) {
-                hour = 0;
-            }
-
-            hourInput.value = hour;
-            minuteInput.value = minute;
-        }
-
-        hourInput.addEventListener('change', adjustTime);
-        minuteInput.addEventListener('change', adjustTime);
-
-        // Biến lưu trữ cấu trúc lịch dưới dạng mảng 2 chiều
-        let scheduleData = [];
-        let isScheduleCreated = false;
-
-        const stages = [
+    (() => {
+        // Khai báo các hằng số
+        const STAGES = [
             "Bắt đầu phân tán",
             "Phân tán P1",
             "Phân tán P2",
@@ -298,9 +251,8 @@
             "Hút cấp sét"
         ];
 
-        // Các hàng cần hiển thị
-        const filteredRows = [0, 3, 4, 5, 6, 7];
-        const rowLabels   = [
+        const FILTERED_ROWS = [0, 3, 4, 5, 6, 7];
+        const ROW_LABELS = [
             "Bắt đầu phân tán",
             "Phân tán xong",
             "Hút hạt cát",
@@ -309,18 +261,66 @@
             "Hút cấp sét",
         ];
 
-        const numSamplesEl    = document.getElementById('numSamples');
-        const startHourEl     = document.getElementById('startHour');
-        const startMinuteEl   = document.getElementById('startMinute');
-        const chkTrungTgEl    = document.getElementById('chkTrungTg');
-        const btnGetTimeEl    = document.getElementById('btnGetCurrentTime');
-        const btnCreateEl     = document.getElementById('btnCreateSchedule');
-        const btnResetEl      = document.getElementById('btnReset');
+        // Các biến toàn cục
+        let scheduleData = [];
+        let isScheduleCreated = false;
+        let updateIntervalId = null;
 
-        const lblCurrentTimeEl  = document.getElementById('lblCurrentTime');
-        const lblCurrentStatusEl = document.getElementById('lblCurrentStatus');
-        const lblNextStatusEl    = document.getElementById('lblNextStatus');
-        const tableScheduleEl    = document.getElementById('tableSchedule');
+        // Lấy DOM elements
+        const elements = {
+            alarmAudio: document.getElementById('alarmAudio'),
+            volumeSlider: document.getElementById('volumeSlider'),
+            muteBtn: document.getElementById('muteBtn'),
+            numSamples: document.getElementById('numSamples'),
+            startHour: document.getElementById('startHour'),
+            startMinute: document.getElementById('startMinute'),
+            chkTrungTg: document.getElementById('chkTrungTg'),
+            btnGetTime: document.getElementById('btnGetCurrentTime'),
+            btnCreate: document.getElementById('btnCreateSchedule'),
+            btnReset: document.getElementById('btnReset'),
+            lblCurrentTime: document.getElementById('lblCurrentTime'),
+            lblCurrentStatus: document.getElementById('lblCurrentStatus'),
+            lblNextStatus: document.getElementById('lblNextStatus'),
+            tableSchedule: document.getElementById('tableSchedule')
+        };
+
+        /*****************************************************
+         * Điều khiển volume & Mute/Unmute
+         *****************************************************/
+        // Lắng nghe thanh trượt âm lượng
+        elements.volumeSlider.addEventListener('input', function() {
+            elements.alarmAudio.volume = parseFloat(this.value);
+        });
+
+        // Nút Mute/Unmute
+        elements.muteBtn.addEventListener('click', function() {
+            elements.alarmAudio.muted = !elements.alarmAudio.muted;
+            this.textContent = elements.alarmAudio.muted ? "Unmute" : "Mute";
+        });
+
+        /*****************************************************
+         * Phần JS mô phỏng lại logic PyQt5 ban đầu
+         *****************************************************/
+        function adjustTime() {
+            let hour = parseInt(elements.startHour.value) || 0;
+            let minute = parseInt(elements.startMinute.value) || 0;
+
+            if (minute < 0) {
+                minute += 60;
+                hour -= 1;
+            } else if (minute >= 60) {
+                minute -= 60;
+                hour += 1;
+            }
+
+            hour = (hour < 0) ? 23 : (hour >= 24) ? 0 : hour;
+
+            elements.startHour.value = hour;
+            elements.startMinute.value = minute;
+        }
+
+        elements.startHour.addEventListener('change', adjustTime);
+        elements.startMinute.addEventListener('change', adjustTime);
 
         /*****************************************************
          * Hàm tiện ích xử lý Date
@@ -330,18 +330,13 @@
         }
 
         function formatFullDate(dateObj) {
-            let H  = String(dateObj.getHours()).padStart(2, '0');
-            let M  = String(dateObj.getMinutes()).padStart(2, '0');
-            let dd = String(dateObj.getDate()).padStart(2, '0');
-            let mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-            let yyyy = dateObj.getFullYear();
-            return `${H}:${M} - ${dd}/${mm}/${yyyy}`;
+            return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) + 
+                   ' - ' + 
+                   dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
 
         function formatHourMinute(dateObj) {
-            let H = String(dateObj.getHours()).padStart(2, '0');
-            let M = String(dateObj.getMinutes()).padStart(2, '0');
-            return `${H}:${M}`;
+            return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
 
         function addMinutes(dateObj, minutes) {
@@ -349,50 +344,77 @@
         }
 
         function isSameDateTime(d1, d2) {
-            return (
-                d1.getFullYear() === d2.getFullYear() &&
-                d1.getMonth() === d2.getMonth() &&
-                d1.getDate() === d2.getDate() &&
-                d1.getHours() === d2.getHours() &&
-                d1.getMinutes() === d2.getMinutes() &&
-                d1.getSeconds() === d2.getSeconds()
-            );
+            return Math.abs(d1 - d2) < 1000; // Sai lệch dưới 1 giây
+        }
+
+        function parseFullTimeString(str) {
+            if (!str || typeof str !== 'string') return null;
+            
+            try {
+                let parts = str.split(" - ");
+                if (parts.length !== 2) return null;
+                
+                let hm = parts[0];
+                let dmy = parts[1];
+
+                let hmArr = hm.split(":");
+                if (hmArr.length !== 2) return null;
+                let H = parseInt(hmArr[0]);
+                let M = parseInt(hmArr[1]);
+
+                let dmyArr = dmy.split("/");
+                if (dmyArr.length !== 3) return null;
+                let dd = parseInt(dmyArr[0]);
+                let mm = parseInt(dmyArr[1]) - 1;
+                let yyyy = parseInt(dmyArr[2]);
+
+                return new Date(yyyy, mm, dd, H, M);
+            } catch (e) {
+                console.error("Lỗi khi parse thời gian:", e);
+                return null;
+            }
         }
 
         /*****************************************************
          * Hàm mô phỏng tính toán thời gian
          *****************************************************/
-        function calculatePhanTanTimes(startTime) {
-            let p1  = addMinutes(startTime, 1);
-            let p2  = addMinutes(startTime, 2);
-            let xong = addMinutes(startTime, 3);
-            return [p1, p2, xong];
-        }
-
-        function calculateHutTimes(phantanxong) {
+        function calculateTimes(startTime) {
+            // Tính toán thời gian phân tán
+            const p1 = addMinutes(startTime, 1);
+            const p2 = addMinutes(startTime, 2);
+            const pxong = addMinutes(startTime, 3);
+            
+            // Tính toán thời gian hút
+            const hutTimes = {
+                hut_sa: addMinutes(pxong, 2),
+                hut_lt: addMinutes(pxong, 15),
+                hut_lm: addMinutes(pxong, 69),
+                hut_s: addMinutes(pxong, 1206)
+            };
+            
             return {
-                hut_sa: addMinutes(phantanxong, 2),
-                hut_lt: addMinutes(phantanxong, 15),
-                hut_lm: addMinutes(phantanxong, 69),
-                hut_s : addMinutes(phantanxong, 1206)
+                startTime,
+                p1,
+                p2,
+                pxong,
+                ...hutTimes
             };
         }
 
         function generateSampleSchedule(startTime, isTrungTg) {
-            let [p1, p2, pxong] = calculatePhanTanTimes(startTime);
-            let hutTimes = calculateHutTimes(pxong);
+            const times = calculateTimes(startTime);
+            
+            const nextStartTime = addMinutes(startTime, (isTrungTg ? 4 : 6));
 
-            let nextStartTime = addMinutes(startTime, (isTrungTg ? 4 : 6));
-
-            let arr = [
-                formatFullDate(startTime),
-                formatFullDate(p1),
-                formatFullDate(p2),
-                formatFullDate(pxong),
-                formatFullDate(hutTimes.hut_sa),
-                formatFullDate(hutTimes.hut_lt),
-                formatFullDate(hutTimes.hut_lm),
-                formatFullDate(hutTimes.hut_s)
+            const arr = [
+                formatFullDate(times.startTime),
+                formatFullDate(times.p1),
+                formatFullDate(times.p2),
+                formatFullDate(times.pxong),
+                formatFullDate(times.hut_sa),
+                formatFullDate(times.hut_lt),
+                formatFullDate(times.hut_lm),
+                formatFullDate(times.hut_s)
             ];
 
             return [arr, nextStartTime];
@@ -402,12 +424,18 @@
          * Hàm tạo lịch
          *****************************************************/
         function createSchedule() {
-            let numsOfSample = parseInt(numSamplesEl.value) || 0;
-            let sHour = parseInt(startHourEl.value) || 0;
-            let sMin  = parseInt(startMinuteEl.value) || 0;
-            let isTrungTg = chkTrungTgEl.checked;
+            const numsOfSample = parseInt(elements.numSamples.value) || 0;
+            if (numsOfSample <= 0) {
+                alert("Vui lòng nhập số lượng mẫu hợp lệ");
+                resetSchedule();
+                return;
+            }
+            
+            const sHour = parseInt(elements.startHour.value) || 0;
+            const sMin = parseInt(elements.startMinute.value) || 0;
+            const isTrungTg = elements.chkTrungTg.checked;
 
-            let now = getNowDate();
+            const now = getNowDate();
             let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
 
             let results = [];
@@ -420,18 +448,15 @@
             }
 
             if (results.length === 0) {
-                isScheduleCreated = false;
-                scheduleData = [];
-                renderScheduleTable();
-                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có lịch";
-                lblNextStatusEl.textContent    = "Trạng thái tiếp theo: Không có lịch";
+                resetSchedule();
                 return;
             }
 
-            let rowCount = stages.length;
-            let colCount = results.length;
+            // Chuyển đổi dữ liệu sang dạng matrix
+            const rowCount = STAGES.length;
+            const colCount = results.length;
 
-            scheduleData = new Array(rowCount).fill(null).map(() => new Array(colCount).fill(""));
+            scheduleData = Array(rowCount).fill().map(() => Array(colCount).fill(""));
             for (let c = 0; c < colCount; c++) {
                 for (let r = 0; r < rowCount; r++) {
                     scheduleData[r][c] = results[c][r];
@@ -440,87 +465,82 @@
 
             isScheduleCreated = true;
             renderScheduleTable();
+            
+            // Bắt đầu cập nhật định kỳ nếu chưa có
+            if (!updateIntervalId) {
+                updateIntervalId = setInterval(updateUIEverySecond, 1000);
+            }
         }
 
         /*****************************************************
          * Hàm hiển thị bảng schedule
          *****************************************************/
         function renderScheduleTable() {
-            tableScheduleEl.innerHTML = "";
+            elements.tableSchedule.innerHTML = "";
 
-            if (!isScheduleCreated || scheduleData.length === 0) {
+            if (!isScheduleCreated || !scheduleData.length) {
                 return;
             }
 
-            let colCount = scheduleData[0].length;
-            let thead = document.createElement('thead');
-            let trHead = document.createElement('tr');
-            let thEmpty = document.createElement('th');
-            thEmpty.textContent = "";
-            trHead.appendChild(thEmpty);
-
+            const colCount = scheduleData[0].length;
+            const fragment = document.createDocumentFragment();
+            
+            // Tạo header
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            
+            // Ô rỗng đầu tiên
+            trHead.appendChild(document.createElement('th'));
+            
+            // Tạo các ô header cho từng mẫu
             for (let c = 0; c < colCount; c++) {
-                let th = document.createElement('th');
+                const th = document.createElement('th');
                 th.textContent = `Mẫu ${c+1}`;
                 trHead.appendChild(th);
             }
+            
             thead.appendChild(trHead);
+            fragment.appendChild(thead);
 
-            let tbody = document.createElement('tbody');
-            for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
-                let actualRow = filteredRows[rIndex];
-                let tr = document.createElement('tr');
-                let tdLabel = document.createElement('td');
-                tdLabel.textContent = rowLabels[rIndex];
+            // Tạo body
+            const tbody = document.createElement('tbody');
+            
+            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+                const actualRow = FILTERED_ROWS[rIndex];
+                const tr = document.createElement('tr');
+                
+                // Tạo ô label
+                const tdLabel = document.createElement('td');
+                tdLabel.textContent = ROW_LABELS[rIndex];
                 tr.appendChild(tdLabel);
 
+                // Tạo các ô dữ liệu
                 for (let c = 0; c < colCount; c++) {
-                    let td = document.createElement('td');
-                    let fullTimeStr = scheduleData[actualRow][c];
-                    let dateObj = parseFullTimeString(fullTimeStr);
-                    if (dateObj) {
-                        td.textContent = formatHourMinute(dateObj);
-                    } else {
-                        td.textContent = fullTimeStr;
-                    }
+                    const td = document.createElement('td');
+                    const fullTimeStr = scheduleData[actualRow][c];
+                    const dateObj = parseFullTimeString(fullTimeStr);
+                    
+                    td.textContent = dateObj ? formatHourMinute(dateObj) : fullTimeStr;
                     tr.appendChild(td);
                 }
+                
                 tbody.appendChild(tr);
             }
-
-            tableScheduleEl.appendChild(thead);
-            tableScheduleEl.appendChild(tbody);
-        }
-
-        function parseFullTimeString(str) {
-            let parts = str.split(" - ");
-            if (parts.length !== 2) return null;
-            let hm = parts[0];
-            let dmy = parts[1];
-
-            let hmArr = hm.split(":");
-            if (hmArr.length !== 2) return null;
-            let H = parseInt(hmArr[0]);
-            let M = parseInt(hmArr[1]);
-
-            let dmyArr = dmy.split("/");
-            if (dmyArr.length !== 3) return null;
-            let dd = parseInt(dmyArr[0]);
-            let mm = parseInt(dmyArr[1]) - 1;
-            let yyyy = parseInt(dmyArr[2]);
-
-            return new Date(yyyy, mm, dd, H, M);
+            
+            fragment.appendChild(tbody);
+            elements.tableSchedule.appendChild(fragment);
         }
 
         /*****************************************************
          * Cập nhật UI mỗi giây
          *****************************************************/
         function updateUIEverySecond() {
-            let now = getNowDate();
-            lblCurrentTimeEl.textContent = "Thời gian hiện tại: " +
+            const now = getNowDate();
+            elements.lblCurrentTime.textContent = "Thời gian hiện tại: " +
                 now.toLocaleTimeString('vi-VN', { hour12: false });
 
             if (!isScheduleCreated) return;
+            
             updateTableColor(now);
             updateCurrentStage(now);
             updateNextStage(now);
@@ -528,18 +548,21 @@
         }
 
         function updateTableColor(now) {
-            if (!isScheduleCreated) return;
-            let rowCount = scheduleData.length; 
-            let colCount = rowCount === 0 ? 0 : scheduleData[0].length;
-            let futureStages = [];
+            if (!isScheduleCreated || !scheduleData.length) return;
+            
+            const colCount = scheduleData[0].length;
+            const futureStages = [];
 
-            let trs = tableScheduleEl.getElementsByTagName('tbody')[0]?.getElementsByTagName('tr') || [];
+            const trs = elements.tableSchedule.querySelector('tbody')?.querySelectorAll('tr') || [];
+            if (!trs.length) return;
 
-            for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
-                let actualRow = filteredRows[rIndex];
+            // Tìm các giai đoạn tương lai và sắp xếp theo thời gian
+            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+                const actualRow = FILTERED_ROWS[rIndex];
+                
                 for (let c = 0; c < colCount; c++) {
-                    let cellValue = scheduleData[actualRow][c];
-                    let dateObj = parseFullTimeString(cellValue);
+                    const cellValue = scheduleData[actualRow][c];
+                    const dateObj = parseFullTimeString(cellValue);
 
                     if (dateObj && dateObj > now) {
                         futureStages.push({
@@ -552,37 +575,42 @@
             }
 
             futureStages.sort((a, b) => a.dateObj - b.dateObj);
-            let next3 = futureStages.slice(0, 3);
+            const next3 = futureStages.slice(0, 3);
 
-            let orangeStage = (next3.length > 0) ? {r: next3[0].rowIdx, c: next3[0].colIdx} : null;
-            let yellowStages = new Set();
+            const orangeStage = (next3.length > 0) ? {r: next3[0].rowIdx, c: next3[0].colIdx} : null;
+            const yellowStages = new Set();
+            
             if (next3.length > 1) {
                 for (let i = 1; i < next3.length; i++) {
                     yellowStages.add(`${next3[i].rowIdx},${next3[i].colIdx}`);
                 }
             }
 
-            for (let rIndex = 0; rIndex < filteredRows.length; rIndex++) {
-                let tr = trs[rIndex];
-                let actualRow = filteredRows[rIndex];
-                let tds = tr.getElementsByTagName('td');
+            // Cập nhật màu sắc cho các ô
+            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+                const tr = trs[rIndex];
+                if (!tr) continue;
+                
+                const actualRow = FILTERED_ROWS[rIndex];
+                const tds = tr.querySelectorAll('td');
+                
                 for (let c = 1; c <= colCount; c++) {
-                    let td = tds[c];
+                    const td = tds[c];
                     if (!td) continue;
-                    let cellValue = scheduleData[actualRow][c-1];
-                    let dateObj = parseFullTimeString(cellValue);
+                    
+                    const cellValue = scheduleData[actualRow][c-1];
+                    const dateObj = parseFullTimeString(cellValue);
 
+                    // Reset class
                     td.className = "";
 
                     if (dateObj) {
                         if (dateObj <= now) {
-                            let diffSec = (now - dateObj) / 1000;
-                            if (diffSec >= 60) {
-                                td.classList.add('lightgray');
-                            } else {
-                                td.classList.add('lightgreen');
-                            }
+                            // Giai đoạn đã qua
+                            const diffSec = (now - dateObj) / 1000;
+                            td.classList.add(diffSec >= 60 ? 'lightgray' : 'lightgreen');
                         } else {
+                            // Giai đoạn sắp tới
                             if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c-1)) {
                                 td.classList.add('orange');
                             } else if (yellowStages.has(`${rIndex},${c-1}`)) {
@@ -595,140 +623,164 @@
         }
 
         function updateCurrentStage(now) {
-            let matching = [];
             if (!scheduleData.length) {
-                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
+                elements.lblCurrentStatus.textContent = "Trạng thái hiện tại: Không có";
                 return;
             }
 
-            let rowCount = scheduleData.length;
-            let colCount = scheduleData[0].length;
+            const matching = [];
+            const colCount = scheduleData[0].length;
+            const rowCount = scheduleData.length;
 
             for (let c = 0; c < colCount; c++) {
-                let sampleName = `Mẫu ${c + 1}`;
+                const sampleName = `Mẫu ${c + 1}`;
+                
                 for (let r = 0; r < rowCount; r++) {
-                    let fullTimeStr = scheduleData[r][c];
-                    let dateObj = parseFullTimeString(fullTimeStr);
-                    if (dateObj) {
-                        if (dateObj <= now) {
-                            let diffSec = (now - dateObj) / 1000;
-                            if (diffSec <= 60) {
-                                let stageName = stages[r];
-                                if (["Phân tán P1", "Phân tán P2"].includes(stageName)) {
-                                    stageName = "Đang phân tán";
-                                }
-                                matching.push(`${stageName} - ${sampleName}`);
+                    const fullTimeStr = scheduleData[r][c];
+                    const dateObj = parseFullTimeString(fullTimeStr);
+                    
+                    if (dateObj && dateObj <= now) {
+                        const diffSec = (now - dateObj) / 1000;
+                        
+                        if (diffSec <= 60) {
+                            let stageName = STAGES[r];
+                            
+                            // Gộp các giai đoạn phân tán
+                            if (["Phân tán P1", "Phân tán P2"].includes(stageName)) {
+                                stageName = "Đang phân tán";
                             }
+                            
+                            matching.push(`${stageName} - ${sampleName}`);
                         }
                     }
                 }
             }
 
-            if (matching.length > 0) {
-                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: " + matching.join(", ");
-            } else {
-                lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
-            }
+            elements.lblCurrentStatus.textContent = matching.length > 0 
+                ? "Trạng thái hiện tại: " + matching.join(", ")
+                : "Trạng thái hiện tại: Không có";
         }
 
         function updateNextStage(now) {
-            let nextArr = [];
             if (!scheduleData.length) {
-                lblNextStatusEl.textContent = "Trạng thái tiếp theo: Không có";
+                elements.lblNextStatus.textContent = "Trạng thái tiếp theo: Không có";
                 return;
             }
 
-            let rowCount = scheduleData.length;
-            let colCount = scheduleData[0].length;
+            const nextArr = [];
+            const colCount = scheduleData[0].length;
+            const rowCount = scheduleData.length;
 
             for (let c = 0; c < colCount; c++) {
-                let sampleName = `Mẫu ${c+1}`;
+                const sampleName = `Mẫu ${c+1}`;
+                
                 for (let r = 0; r < rowCount; r++) {
-                    let fullTimeStr = scheduleData[r][c];
-                    let dateObj = parseFullTimeString(fullTimeStr);
+                    const stageName = STAGES[r];
+                    
+                    // Bỏ qua giai đoạn Phân tán P1 và P2
+                    if (stageName === "Phân tán P1" || stageName === "Phân tán P2") continue;
+                    
+                    const fullTimeStr = scheduleData[r][c];
+                    const dateObj = parseFullTimeString(fullTimeStr);
+                    
                     if (dateObj && dateObj > now) {
-                        let stageName = stages[r];
-                        if (stageName !== "Phân tán P1" && stageName !== "Phân tán P2") {
-                            let diffSec = (dateObj - now) / 1000;
-                            if (diffSec < 60) {
-                                nextArr.push({
-                                    dateObj: dateObj,
-                                    text: `${stageName} - ${sampleName} (${Math.floor(diffSec)} sec)`
-                                });
-                            } else {
-                                let diffMin = Math.floor(diffSec / 60);
-                                nextArr.push({
-                                    dateObj: dateObj,
-                                    text: `${stageName} - ${sampleName} (${diffMin} min)`
-                                });
-                            }
+                        const diffSec = (dateObj - now) / 1000;
+                        
+                        if (diffSec < 60) {
+                            nextArr.push({
+                                dateObj: dateObj,
+                                text: `${stageName} - ${sampleName} (${Math.floor(diffSec)} sec)`
+                            });
+                        } else {
+                            const diffMin = Math.floor(diffSec / 60);
+                            nextArr.push({
+                                dateObj: dateObj,
+                                text: `${stageName} - ${sampleName} (${diffMin} min)`
+                            });
                         }
                     }
                 }
             }
+            
             nextArr.sort((a, b) => a.dateObj - b.dateObj);
-            nextArr = nextArr.slice(0, 3).map(item => item.text);
+            const topNextArr = nextArr.slice(0, 3).map(item => item.text);
 
-            if (nextArr.length > 0) {
-                lblNextStatusEl.textContent = "Trạng thái tiếp theo: " + nextArr.join(", ");
-            } else {
-                lblNextStatusEl.textContent = "Trạng thái tiếp theo: Không có";
-            }
+            elements.lblNextStatus.textContent = topNextArr.length > 0
+                ? "Trạng thái tiếp theo: " + topNextArr.join(", ")
+                : "Trạng thái tiếp theo: Không có";
         }
 
         function checkAlarm(now) {
             if (!scheduleData.length) return;
 
-            let rowCount = scheduleData.length;
-            let colCount = scheduleData[0].length;
+            const colCount = scheduleData[0].length;
+            const rowCount = scheduleData.length;
 
             for (let c = 0; c < colCount; c++) {
                 for (let r = 0; r < rowCount; r++) {
-                    let stageName = stages[r];
+                    const stageName = STAGES[r];
+                    
+                    // Bỏ qua các giai đoạn phân tán P1, P2
                     if (stageName === "Phân tán P1" || stageName === "Phân tán P2") continue;
-                    let fullTimeStr = scheduleData[r][c];
-                    let dateObj = parseFullTimeString(fullTimeStr);
+                    
+                    const fullTimeStr = scheduleData[r][c];
+                    const dateObj = parseFullTimeString(fullTimeStr);
+                    
                     if (dateObj && isSameDateTime(dateObj, now)) {
-                        playSound();
+                        playAlarm();
                         return;
                     }
                 }
             }
         }
 
-        function playSound() {
-            alarmAudioEl.currentTime = 0;
-            alarmAudioEl.play();
-            setTimeout(() => {
-                alarmAudioEl.pause();
-                alarmAudioEl.currentTime = 0;
-            }, 5000);
+        function playAlarm() {
+            // Tránh phát nhiều lần
+            if (elements.alarmAudio.paused) {
+                elements.alarmAudio.currentTime = 0;
+                elements.alarmAudio.play();
+                
+                setTimeout(() => {
+                    elements.alarmAudio.pause();
+                    elements.alarmAudio.currentTime = 0;
+                }, 5000);
+            }
         }
 
-        btnGetTimeEl.addEventListener('click', () => {
-            let now = getNowDate();
-            startHourEl.value   = now.getHours();
-            startMinuteEl.value = now.getMinutes();
-        });
-
-        btnCreateEl.addEventListener('click', () => {
-            createSchedule();
-        });
-
-        btnResetEl.addEventListener('click', () => {
-            numSamplesEl.value  = 0;
-            startHourEl.value   = 0;
-            startMinuteEl.value = 0;
-            chkTrungTgEl.checked = false;
-
+        function resetSchedule() {
             scheduleData = [];
             isScheduleCreated = false;
             renderScheduleTable();
-            lblCurrentStatusEl.textContent = "Trạng thái hiện tại: Không có";
-            lblNextStatusEl.textContent    = "Trạng thái tiếp theo: Không có";
+            elements.lblCurrentStatus.textContent = "Trạng thái hiện tại: Không có";
+            elements.lblNextStatus.textContent = "Trạng thái tiếp theo: Không có";
+        }
+
+        /*****************************************************
+         * Event Handlers
+         *****************************************************/
+        elements.btnGetTime.addEventListener('click', () => {
+            const now = getNowDate();
+            elements.startHour.value = now.getHours();
+            elements.startMinute.value = now.getMinutes();
         });
 
-        setInterval(updateUIEverySecond, 1000);
+        elements.btnCreate.addEventListener('click', createSchedule);
+
+        elements.btnReset.addEventListener('click', () => {
+            elements.numSamples.value = "";
+            elements.startHour.value = "";
+            elements.startMinute.value = "";
+            elements.chkTrungTg.checked = false;
+            resetSchedule();
+        });
+
+        // Khởi tạo cập nhật UI ngay khi trang tải xong
+        updateUIEverySecond();
+        updateIntervalId = setInterval(updateUIEverySecond, 1000);
+
+        // Khởi tạo giá trị mặc định cho ô âm lượng
+        elements.alarmAudio.volume = elements.volumeSlider.value;
+    })();
     </script>
 </body>
 </html>
