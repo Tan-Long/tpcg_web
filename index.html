@@ -153,46 +153,6 @@
             width: 200px;
             margin-right: 10px;
         }
-         .time-picker-container {
-        margin: 15px 0;
-    }
-    
-    .time-picker-container label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 18px;
-        font-weight: 500;
-    }
-    
-    .time-input-wrapper {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .time-picker {
-        font-size: 18px;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 150px;
-        background-color: white;
-        transition: border-color 0.3s;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-    
-    .time-picker:focus {
-        outline: none;
-        border-color: var(--primary-color, #007BFF);
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-    
-    /* Điều chỉnh kích thước trên điện thoại */
-    @media (max-width: 480px) {
-        .time-picker {
-            width: 100%;
-        }
-    }
 
         @media (max-width: 768px) {
             .container {
@@ -238,12 +198,13 @@
             <input type="number" id="numSamples" min="1" placeholder="Số mẫu"/>
 
             <br><br>
-            <div class="time-picker-container">
-                <label for="timePicker">Thời gian bắt đầu:</label>
-                <div class="time-input-wrapper">
-                    <input type="time" id="timePicker" class="time-picker" value="16:05">
-                </div>
-            </div>
+
+            <label>Thời gian bắt đầu:</label>
+            <br>
+            <label for="startHour">Giờ:</label>
+            <input type="number" id="startHour" min="-1" max="24" placeholder="00-23" />
+            <label for="startMinute">Phút:</label>
+            <input type="number" id="startMinute" min="-1" max="60" placeholder="00-59" />
 
             <br><br>
 
@@ -311,8 +272,8 @@
             volumeSlider: document.getElementById('volumeSlider'),
             muteBtn: document.getElementById('muteBtn'),
             numSamples: document.getElementById('numSamples'),
-            timePicker: document.getElementById('timePicker'),
-            ampmDisplay: document.querySelector('.ampm-display'),
+            startHour: document.getElementById('startHour'),
+            startMinute: document.getElementById('startMinute'),
             chkTrungTg: document.getElementById('chkTrungTg'),
             btnGetTime: document.getElementById('btnGetCurrentTime'),
             btnCreate: document.getElementById('btnCreateSchedule'),
@@ -340,15 +301,6 @@
         /*****************************************************
          * Phần JS mô phỏng lại logic PyQt5 ban đầu
          *****************************************************/
-        function updateAMPMDisplay() {
-            const timeValue = elements.timePicker.value;
-            if (!timeValue) return;
-            
-            const [hours] = timeValue.split(':').map(num => parseInt(num));
-            elements.ampmDisplay.textContent = hours >= 12 ? 'PM' : 'AM';
-        }
-    
-        
         function adjustTime() {
             let hour = parseInt(elements.startHour.value) || 0;
             let minute = parseInt(elements.startMinute.value) || 0;
@@ -369,7 +321,7 @@
 
         elements.startHour.addEventListener('change', adjustTime);
         elements.startMinute.addEventListener('change', adjustTime);
-        elements.timePicker.addEventListener('change', updateAMPMDisplay);
+
         /*****************************************************
          * Hàm tiện ích xử lý Date
          *****************************************************/
@@ -479,14 +431,10 @@
                 return;
             }
             
-            // Lấy giờ và phút từ time picker
-            const timeValue = elements.timePicker.value; // Format: "HH:MM"
-            const [sHour, sMin] = timeValue.split(':').map(num => parseInt(num));
-            
+            const sHour = parseInt(elements.startHour.value) || 0;
+            const sMin = parseInt(elements.startMinute.value) || 0;
             const isTrungTg = elements.chkTrungTg.checked;
-            const now = getNowDate();
-            let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
-        
+
             const now = getNowDate();
             let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
 
@@ -812,16 +760,16 @@
          *****************************************************/
         elements.btnGetTime.addEventListener('click', () => {
             const now = getNowDate();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            elements.timePicker.value = `${hours}:${minutes}`;
+            elements.startHour.value = now.getHours();
+            elements.startMinute.value = now.getMinutes();
         });
 
         elements.btnCreate.addEventListener('click', createSchedule);
 
         elements.btnReset.addEventListener('click', () => {
             elements.numSamples.value = "";
-            elements.timePicker.value = "00:00";
+            elements.startHour.value = "";
+            elements.startMinute.value = "";
             elements.chkTrungTg.checked = false;
             resetSchedule();
         });
