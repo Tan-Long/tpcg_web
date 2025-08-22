@@ -102,340 +102,340 @@
     </div>
   </div>
 
-  <script>
-    (() => {
-      // ====== HẰNG SỐ ======
-      const STAGES = [
-        "Bắt đầu phân tán",
-        "Phân tán P1",
-        "Phân tán P2",
-        "Phân tán xong",
-        "Hút hạt cát",
-        "Hút limon thô",
-        "Hút limon mịn",
-        "Hút cấp sét"
-      ];
+<script>
+(() => {
+  // ====== HẰNG SỐ ======
+  const STAGES = [
+    "Bắt đầu phân tán",
+    "Phân tán P1",
+    "Phân tán P2",
+    "Phân tán xong",
+    "Hút hạt cát",
+    "Hút limon thô",
+    "Hút limon mịn",
+    "Hút cấp sét"
+  ];
 
-      // Chỉ render 6 hàng này trong bảng
-      const FILTERED_ROWS = [0, 3, 4, 5, 6, 7];
-      const ROW_LABELS = [
-        "Bắt đầu phân tán",
-        "Phân tán xong",
-        "Hút hạt cát",
-        "Hút limon thô",
-        "Hút limon mịn",
-        "Hút cấp sét",
-      ];
+  const FILTERED_ROWS = [0, 3, 4, 5, 6, 7];
+  const ROW_LABELS = [
+    "Bắt đầu phân tán",
+    "Phân tán xong",
+    "Hút hạt cát",
+    "Hút limon thô",
+    "Hút limon mịn",
+    "Hút cấp sét",
+  ];
 
-      // ====== BIẾN TRẠNG THÁI ======
-      let scheduleData = [];
-      let isScheduleCreated = false;
-      let updateIntervalId = null;
+  // ====== BIẾN TRẠNG THÁI ======
+  let scheduleData = [];
+  let isScheduleCreated = false;
+  let updateIntervalId = null;
 
-      // ====== DOM ======
-      const el = {
-        alarmAudio: document.getElementById('alarmAudio'),
-        volumeSlider: document.getElementById('volumeSlider'),
-        muteBtn: document.getElementById('muteBtn'),
-        numSamples: document.getElementById('numSamples'),
-        timePicker: document.getElementById('timePicker'),
-        chkTrungTg: document.getElementById('chkTrungTg'),
-        btnGetTime: document.getElementById('btnGetCurrentTime'),
-        btnCreate: document.getElementById('btnCreateSchedule'),
-        btnReset: document.getElementById('btnReset'),
-        lblCurrentTime: document.getElementById('lblCurrentTime'),
-        lblCurrentStatus: document.getElementById('lblCurrentStatus'),
-        lblNextStatus: document.getElementById('lblNextStatus'),
-        tableSchedule: document.getElementById('tableSchedule')
-      };
+  // ====== DOM ======
+  const el = {
+    alarmAudio: document.getElementById('alarmAudio'),
+    volumeSlider: document.getElementById('volumeSlider'),
+    muteBtn: document.getElementById('muteBtn'),
+    numSamples: document.getElementById('numSamples'),
+    timePicker: document.getElementById('timePicker'),
+    chkTrungTg: document.getElementById('chkTrungTg'),
+    btnGetTime: document.getElementById('btnGetCurrentTime'),
+    btnCreate: document.getElementById('btnCreateSchedule'),
+    btnReset: document.getElementById('btnReset'),
+    lblCurrentTime: document.getElementById('lblCurrentTime'),
+    lblCurrentStatus: document.getElementById('lblCurrentStatus'),
+    lblNextStatus: document.getElementById('lblNextStatus'),
+    tableSchedule: document.getElementById('tableSchedule')
+  };
 
-      // ====== ÂM LƯỢNG ======
-      el.volumeSlider.addEventListener('input', function () {
-        el.alarmAudio.volume = parseFloat(this.value);
-      });
-      el.muteBtn.addEventListener('click', function () {
-        el.alarmAudio.muted = !el.alarmAudio.muted;
-        this.textContent = el.alarmAudio.muted ? 'Unmute' : 'Mute';
-      });
+  // ====== ÂM LƯỢNG ======
+  el.volumeSlider.addEventListener('input', function () {
+    el.alarmAudio.volume = parseFloat(this.value);
+  });
+  el.muteBtn.addEventListener('click', function () {
+    el.alarmAudio.muted = !el.alarmAudio.muted;
+    this.textContent = el.alarmAudio.muted ? 'Unmute' : 'Mute';
+  });
 
-      // ====== TIỆN ÍCH THỜI GIAN ======
-      const getNow = () => new Date();
-      const formatFullDate = (d) => (
-        d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) +
-        ' - ' +
-        d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      );
-      const formatHM = (d) => d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
-      const addMinutes = (d, m) => new Date(d.getTime() + m * 60000);
-      const isSameSecond = (d1, d2) => Math.abs(d1 - d2) < 1000;
-      function parseFullTimeString(str) {
-        if (!str || typeof str !== 'string') return null;
-        try {
-          const [hm, dmy] = str.split(' - ');
-          if (!hm || !dmy) return null;
-          const [H, M] = hm.split(':').map(n => parseInt(n, 10));
-          const [dd, mm, yyyy] = dmy.split('/').map(n => parseInt(n, 10));
-          return new Date(yyyy, mm - 1, dd, H, M);
-        } catch (e) {
-          console.error('Parse time error:', e);
-          return null;
-        }
+  // ====== TIỆN ÍCH THỜI GIAN ======
+  const getNow = () => new Date();
+  const formatFullDate = (d) => (
+    d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) +
+    ' - ' +
+    d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  );
+  const formatHM = (d) => d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const addMinutes = (d, m) => new Date(d.getTime() + m * 60000);
+  const isSameSecond = (d1, d2) => Math.abs(d1 - d2) < 1000;
+  function parseFullTimeString(str) {
+    if (!str || typeof str !== 'string') return null;
+    try {
+      const [hm, dmy] = str.split(' - ');
+      if (!hm || !dmy) return null;
+      const [H, M] = hm.split(':').map(n => parseInt(n, 10));
+      const [dd, mm, yyyy] = dmy.split('/').map(n => parseInt(n, 10));
+      return new Date(yyyy, mm - 1, dd, H, M);
+    } catch (e) {
+      console.error('Parse time error:', e);
+      return null;
+    }
+  }
+
+  // ====== TÍNH TOÁN LỊCH ======
+  function calculateTimes(startTime) {
+    const p1 = addMinutes(startTime, 1);
+    const p2 = addMinutes(startTime, 2);
+    const pxong = addMinutes(startTime, 3);
+    return {
+      startTime,
+      p1,
+      p2,
+      pxong,
+      hut_sa: addMinutes(pxong, 2),
+      hut_lt: addMinutes(pxong, 15),
+      hut_lm: addMinutes(pxong, 69),
+      hut_s: addMinutes(pxong, 1206)
+    };
+  }
+
+  function generateSampleSchedule(startTime, isTrungTg) {
+    const t = calculateTimes(startTime);
+    const nextStartTime = addMinutes(startTime, isTrungTg ? 4 : 6);
+    const arr = [
+      formatFullDate(t.startTime),
+      formatFullDate(t.p1),
+      formatFullDate(t.p2),
+      formatFullDate(t.pxong),
+      formatFullDate(t.hut_sa),
+      formatFullDate(t.hut_lt),
+      formatFullDate(t.hut_lm),
+      formatFullDate(t.hut_s)
+    ];
+    return [arr, nextStartTime];
+  }
+
+  function createSchedule() {
+    const n = parseInt(el.numSamples.value, 10) || 0;
+    if (n <= 0) {
+      alert('Vui lòng nhập số lượng mẫu hợp lệ');
+      resetSchedule();
+      return;
+    }
+    const timeValue = el.timePicker.value; // HH:MM
+    const [sHour, sMin] = timeValue.split(':').map(v => parseInt(v, 10));
+    const isTrungTg = el.chkTrungTg.checked;
+
+    // Đổi tên biến để tránh mọi khả năng trùng
+    const currentTime = getNow();
+    let startTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), sHour, sMin);
+
+    const results = [];
+    let temp = startTime;
+    for (let i = 0; i < n; i++) {
+      const [sampleArr, nextT] = generateSampleSchedule(temp, isTrungTg);
+      results.push(sampleArr);
+      temp = nextT;
+    }
+    if (!results.length) { resetSchedule(); return; }
+
+    const rowCount = STAGES.length;
+    const colCount = results.length;
+    scheduleData = Array.from({ length: rowCount }, () => Array(colCount).fill(''));
+    for (let c = 0; c < colCount; c++) {
+      for (let r = 0; r < rowCount; r++) {
+        scheduleData[r][c] = results[c][r];
       }
+    }
+    isScheduleCreated = true;
+    renderScheduleTable();
+    if (!updateIntervalId) updateIntervalId = setInterval(updateUIEverySecond, 1000);
+  }
 
-      // ====== TÍNH TOÁN LỊCH ======
-      function calculateTimes(startTime) {
-        const p1 = addMinutes(startTime, 1);
-        const p2 = addMinutes(startTime, 2);
-        const pxong = addMinutes(startTime, 3);
-        const times = {
-          startTime,
-          p1,
-          p2,
-          pxong,
-          hut_sa: addMinutes(pxong, 2),
-          hut_lt: addMinutes(pxong, 15),
-          hut_lm: addMinutes(pxong, 69),
-          hut_s: addMinutes(pxong, 1206)
-        };
-        return times;
+  function renderScheduleTable() {
+    el.tableSchedule.innerHTML = '';
+    if (!isScheduleCreated || !scheduleData.length) return;
+    const colCount = scheduleData[0].length;
+    const frag = document.createDocumentFragment();
+
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+    trHead.appendChild(document.createElement('th'));
+    for (let c = 0; c < colCount; c++) {
+      const th = document.createElement('th');
+      th.textContent = `Mẫu ${c + 1}`;
+      trHead.appendChild(th);
+    }
+    thead.appendChild(trHead);
+    frag.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+      const actualRow = FILTERED_ROWS[rIndex];
+      const tr = document.createElement('tr');
+      const tdLabel = document.createElement('td');
+      tdLabel.textContent = ROW_LABELS[rIndex];
+      tr.appendChild(tdLabel);
+      for (let c = 0; c < colCount; c++) {
+        const td = document.createElement('td');
+        const fullTimeStr = scheduleData[actualRow][c];
+        const d = parseFullTimeString(fullTimeStr);
+        td.textContent = d ? formatHM(d) : fullTimeStr;
+        tr.appendChild(td);
       }
+      tbody.appendChild(tr);
+    }
+    frag.appendChild(tbody);
+    el.tableSchedule.appendChild(frag);
+  }
 
-      function generateSampleSchedule(startTime, isTrungTg) {
-        const t = calculateTimes(startTime);
-        const nextStartTime = addMinutes(startTime, isTrungTg ? 4 : 6);
-        const arr = [
-          formatFullDate(t.startTime),
-          formatFullDate(t.p1),
-          formatFullDate(t.p2),
-          formatFullDate(t.pxong),
-          formatFullDate(t.hut_sa),
-          formatFullDate(t.hut_lt),
-          formatFullDate(t.hut_lm),
-          formatFullDate(t.hut_s)
-        ];
-        return [arr, nextStartTime];
+  function updateUIEverySecond() {
+    const currentTime = getNow();
+    el.lblCurrentTime.textContent = 'Thời gian hiện tại: ' + currentTime.toLocaleTimeString('vi-VN', { hour12: false });
+    if (!isScheduleCreated) return;
+    updateTableColor(currentTime);
+    updateCurrentStage(currentTime);
+    updateNextStage(currentTime);
+    checkAlarm(currentTime);
+  }
+
+  function updateTableColor(currentTime) {
+    if (!isScheduleCreated || !scheduleData.length) return;
+    const colCount = scheduleData[0].length;
+    const future = [];
+    const trs = el.tableSchedule.querySelector('tbody')?.querySelectorAll('tr') || [];
+    if (!trs.length) return;
+
+    for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+      const actualRow = FILTERED_ROWS[rIndex];
+      for (let c = 0; c < colCount; c++) {
+        const cellVal = scheduleData[actualRow][c];
+        const d = parseFullTimeString(cellVal);
+        if (d && d > currentTime) future.push({ rowIdx: rIndex, colIdx: c, dateObj: d });
       }
+    }
+    future.sort((a, b) => a.dateObj - b.dateObj);
+    const next3 = future.slice(0, 3);
+    const orangeStage = next3[0] ? { r: next3[0].rowIdx, c: next3[0].colIdx } : null;
+    const yellowStages = new Set(next3.slice(1).map(x => `${x.rowIdx},${x.colIdx}`));
 
-      function createSchedule() {
-        const n = parseInt(el.numSamples.value, 10) || 0;
-        if (n <= 0) {
-          alert('Vui lòng nhập số lượng mẫu hợp lệ');
-          resetSchedule();
-          return;
-        }
-        const timeValue = el.timePicker.value; // HH:MM
-        const [sHour, sMin] = timeValue.split(':').map(v => parseInt(v, 10));
-        const isTrungTg = el.chkTrungTg.checked;
-        const now = getNow();
-        let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
-
-        const results = [];
-        let temp = startTime;
-        for (let i = 0; i < n; i++) {
-          const [sampleArr, nextT] = generateSampleSchedule(temp, isTrungTg);
-          results.push(sampleArr);
-          temp = nextT;
-        }
-        if (!results.length) { resetSchedule(); return; }
-
-        const rowCount = STAGES.length;
-        const colCount = results.length;
-        scheduleData = Array.from({ length: rowCount }, () => Array(colCount).fill(''));
-        for (let c = 0; c < colCount; c++) {
-          for (let r = 0; r < rowCount; r++) {
-            scheduleData[r][c] = results[c][r];
-          }
-        }
-        isScheduleCreated = true;
-        renderScheduleTable();
-        if (!updateIntervalId) updateIntervalId = setInterval(updateUIEverySecond, 1000);
-      }
-
-      function renderScheduleTable() {
-        el.tableSchedule.innerHTML = '';
-        if (!isScheduleCreated || !scheduleData.length) return;
-        const colCount = scheduleData[0].length;
-        const frag = document.createDocumentFragment();
-
-        const thead = document.createElement('thead');
-        const trHead = document.createElement('tr');
-        trHead.appendChild(document.createElement('th'));
-        for (let c = 0; c < colCount; c++) {
-          const th = document.createElement('th');
-          th.textContent = `Mẫu ${c + 1}`;
-          trHead.appendChild(th);
-        }
-        thead.appendChild(trHead);
-        frag.appendChild(thead);
-
-        const tbody = document.createElement('tbody');
-        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-          const actualRow = FILTERED_ROWS[rIndex];
-          const tr = document.createElement('tr');
-          const tdLabel = document.createElement('td');
-          tdLabel.textContent = ROW_LABELS[rIndex];
-          tr.appendChild(tdLabel);
-          for (let c = 0; c < colCount; c++) {
-            const td = document.createElement('td');
-            const fullTimeStr = scheduleData[actualRow][c];
-            const d = parseFullTimeString(fullTimeStr);
-            td.textContent = d ? formatHM(d) : fullTimeStr;
-            tr.appendChild(td);
-          }
-          tbody.appendChild(tr);
-        }
-        frag.appendChild(tbody);
-        el.tableSchedule.appendChild(frag);
-      }
-
-      function updateUIEverySecond() {
-        const now = getNow();
-        el.lblCurrentTime.textContent = 'Thời gian hiện tại: ' + now.toLocaleTimeString('vi-VN', { hour12: false });
-        if (!isScheduleCreated) return;
-        updateTableColor(now);
-        updateCurrentStage(now);
-        updateNextStage(now);
-        checkAlarm(now);
-      }
-
-      function updateTableColor(now) {
-        if (!isScheduleCreated || !scheduleData.length) return;
-        const colCount = scheduleData[0].length;
-        const future = [];
-        const trs = el.tableSchedule.querySelector('tbody')?.querySelectorAll('tr') || [];
-        if (!trs.length) return;
-
-        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-          const actualRow = FILTERED_ROWS[rIndex];
-          for (let c = 0; c < colCount; c++) {
-            const cellVal = scheduleData[actualRow][c];
-            const d = parseFullTimeString(cellVal);
-            if (d && d > now) future.push({ rowIdx: rIndex, colIdx: c, dateObj: d });
-          }
-        }
-        future.sort((a, b) => a.dateObj - b.dateObj);
-        const next3 = future.slice(0, 3);
-        const orangeStage = next3[0] ? { r: next3[0].rowIdx, c: next3[0].colIdx } : null;
-        const yellowStages = new Set(next3.slice(1).map(x => `${x.rowIdx},${x.colIdx}`));
-
-        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-          const tr = trs[rIndex];
-          if (!tr) continue;
-          const actualRow = FILTERED_ROWS[rIndex];
-          const tds = tr.querySelectorAll('td');
-          for (let c = 1; c <= colCount; c++) {
-            const td = tds[c];
-            if (!td) continue;
-            const cellVal = scheduleData[actualRow][c - 1];
-            const d = parseFullTimeString(cellVal);
-            td.className = '';
-            if (d) {
-              if (d <= now) {
-                const diffSec = (now - d) / 1000;
-                td.classList.add(diffSec >= 60 ? 'lightgray' : 'lightgreen');
-              } else {
-                if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c - 1)) td.classList.add('orange');
-                else if (yellowStages.has(`${rIndex},${c - 1}`)) td.classList.add('yellow');
-              }
-            }
-          }
-        }
-      }
-
-      function updateCurrentStage(now) {
-        if (!scheduleData.length) { el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có'; return; }
-        const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const matches = [];
-        for (let c = 0; c < colCount; c++) {
-          const sampleName = `Mẫu ${c + 1}`;
-          for (let r = 0; r < rowCount; r++) {
-            const full = scheduleData[r][c];
-            const d = parseFullTimeString(full);
-            if (d && d <= now) {
-              const diff = (now - d) / 1000;
-              if (diff <= 60) {
-                let stage = STAGES[r];
-                if (stage === 'Phân tán P1' || stage === 'Phân tán P2') stage = 'Đang phân tán';
-                matches.push(`${stage} - ${sampleName}`);
-              }
-            }
-          }
-        }
-        el.lblCurrentStatus.textContent = matches.length ? 'Trạng thái hiện tại: ' + matches.join(', ') : 'Trạng thái hiện tại: Không có';
-      }
-
-      function updateNextStage(now) {
-        if (!scheduleData.length) { el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có'; return; }
-        const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const nextArr = [];
-        for (let c = 0; c < colCount; c++) {
-          const sampleName = `Mẫu ${c + 1}`;
-          for (let r = 0; r < rowCount; r++) {
-            const stage = STAGES[r];
-            if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
-            const full = scheduleData[r][c];
-            const d = parseFullTimeString(full);
-            if (d && d > now) {
-              const diffSec = (d - now) / 1000;
-              const text = diffSec < 60
-                ? `${stage} - ${sampleName} (${Math.floor(diffSec)} sec)`
-                : `${stage} - ${sampleName} (${Math.floor(diffSec / 60)} min)`;
-              nextArr.push({ dateObj: d, text });
-            }
-          }
-        }
-        nextArr.sort((a, b) => a.dateObj - b.dateObj);
-        const top = nextArr.slice(0, 3).map(x => x.text);
-        el.lblNextStatus.textContent = top.length ? 'Trạng thái tiếp theo: ' + top.join(', ') : 'Trạng thái tiếp theo: Không có';
-      }
-
-      function checkAlarm(now) {
-        if (!scheduleData.length) return;
-        const colCount = scheduleData[0].length; const rowCount = scheduleData.length;
-        for (let c = 0; c < colCount; c++) {
-          for (let r = 0; r < rowCount; r++) {
-            const stage = STAGES[r];
-            if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
-            const full = scheduleData[r][c];
-            const d = parseFullTimeString(full);
-            if (d && isSameSecond(d, now)) { playAlarm(); return; }
+    for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+      const tr = trs[rIndex];
+      if (!tr) continue;
+      const actualRow = FILTERED_ROWS[rIndex];
+      const tds = tr.querySelectorAll('td');
+      for (let c = 1; c <= colCount; c++) {
+        const td = tds[c];
+        if (!td) continue;
+        const cellVal = scheduleData[actualRow][c - 1];
+        const d = parseFullTimeString(cellVal);
+        td.className = '';
+        if (d) {
+          if (d <= currentTime) {
+            const diffSec = (currentTime - d) / 1000;
+            td.classList.add(diffSec >= 60 ? 'lightgray' : 'lightgreen');
+          } else {
+            if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c - 1)) td.classList.add('orange');
+            else if (yellowStages.has(`${rIndex},${c - 1}`)) td.classList.add('yellow');
           }
         }
       }
+    }
+  }
 
-      function playAlarm() {
-        if (el.alarmAudio.paused) {
-          el.alarmAudio.currentTime = 0;
-          // Một số trình duyệt cần thao tác người dùng trước khi play audio
-          el.alarmAudio.play().catch(() => {});
-          setTimeout(() => { el.alarmAudio.pause(); el.alarmAudio.currentTime = 0; }, 5000);
+  function updateCurrentStage(currentTime) {
+    if (!scheduleData.length) { el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có'; return; }
+    const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const matches = [];
+    for (let c = 0; c < colCount; c++) {
+      const sampleName = `Mẫu ${c + 1}`;
+      for (let r = 0; r < rowCount; r++) {
+        const full = scheduleData[r][c];
+        const d = parseFullTimeString(full);
+        if (d && d <= currentTime) {
+          const diff = (currentTime - d) / 1000;
+          if (diff <= 60) {
+            let stage = STAGES[r];
+            if (stage === 'Phân tán P1' || stage === 'Phân tán P2') stage = 'Đang phân tán';
+            matches.push(`${stage} - ${sampleName}`);
+          }
         }
       }
+    }
+    el.lblCurrentStatus.textContent = matches.length ? 'Trạng thái hiện tại: ' + matches.join(', ') : 'Trạng thái hiện tại: Không có';
+  }
 
-      function resetSchedule() {
-        scheduleData = [];
-        isScheduleCreated = false;
-        el.tableSchedule.innerHTML = '';
-        el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có';
-        el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có';
+  function updateNextStage(currentTime) {
+    if (!scheduleData.length) { el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có'; return; }
+    const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const nextArr = [];
+    for (let c = 0; c < colCount; c++) {
+      const sampleName = `Mẫu ${c + 1}`;
+      for (let r = 0; r < rowCount; r++) {
+        const stage = STAGES[r];
+        if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
+        const full = scheduleData[r][c];
+        const d = parseFullTimeString(full);
+        if (d && d > currentTime) {
+          const diffSec = (d - currentTime) / 1000;
+          const text = diffSec < 60
+            ? `${stage} - ${sampleName} (${Math.floor(diffSec)} sec)`
+            : `${stage} - ${sampleName} (${Math.floor(diffSec / 60)} min)`;
+          nextArr.push({ dateObj: d, text });
+        }
       }
+    }
+    nextArr.sort((a, b) => a.dateObj - b.dateObj);
+    const top = nextArr.slice(0, 3).map(x => x.text);
+    el.lblNextStatus.textContent = top.length ? 'Trạng thái tiếp theo: ' + top.join(', ') : 'Trạng thái tiếp theo: Không có';
+  }
 
-      // ====== SỰ KIỆN ======
-      el.btnGetTime.addEventListener('click', () => {
-        const now = getNow();
-        el.timePicker.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      });
-      el.btnCreate.addEventListener('click', createSchedule);
-      el.btnReset.addEventListener('click', () => {
-        el.numSamples.value = '';
-        el.timePicker.value = '00:00';
-        el.chkTrungTg.checked = false;
-        resetSchedule();
-      });
+  function checkAlarm(currentTime) {
+    if (!scheduleData.length) return;
+    const colCount = scheduleData[0].length; const rowCount = scheduleData.length;
+    for (let c = 0; c < colCount; c++) {
+      for (let r = 0; r < rowCount; r++) {
+        const stage = STAGES[r];
+        if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
+        const full = scheduleData[r][c];
+        const d = parseFullTimeString(full);
+        if (d && isSameSecond(d, currentTime)) { playAlarm(); return; }
+      }
+    }
+  }
 
-      // ====== KHỞI TẠO ======
-      updateUIEverySecond();
-      updateIntervalId = setInterval(updateUIEverySecond, 1000);
-      el.alarmAudio.volume = parseFloat(el.volumeSlider.value);
-    })();
-  </script>
+  function playAlarm() {
+    if (el.alarmAudio.paused) {
+      el.alarmAudio.currentTime = 0;
+      el.alarmAudio.play().catch(() => {}); // cần tương tác người dùng trước đó để không bị chặn
+      setTimeout(() => { el.alarmAudio.pause(); el.alarmAudio.currentTime = 0; }, 5000);
+    }
+  }
+
+  function resetSchedule() {
+    scheduleData = [];
+    isScheduleCreated = false;
+    el.tableSchedule.innerHTML = '';
+    el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có';
+    el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có';
+  }
+
+  // ====== SỰ KIỆN ======
+  el.btnGetTime.addEventListener('click', () => {
+    const currentTime = getNow();
+    el.timePicker.value = `${String(currentTime.getHours()).padStart(2, '0')}:${String(currentTime.getMinutes()).padStart(2, '0')}`;
+  });
+  el.btnCreate.addEventListener('click', createSchedule);
+  el.btnReset.addEventListener('click', () => {
+    el.numSamples.value = '';
+    el.timePicker.value = '00:00';
+    el.chkTrungTg.checked = false;
+    resetSchedule();
+  });
+
+  // ====== KHỞI TẠO ======
+  updateUIEverySecond();
+  updateIntervalId = setInterval(updateUIEverySecond, 1000);
+  el.alarmAudio.volume = parseFloat(el.volumeSlider.value);
+})();
+</script>
+
 </body>
 </html>
