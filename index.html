@@ -1,825 +1,441 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Lịch Hút TPCG</title>
-    <style>
-        :root {
-            --primary-color: #007BFF;
-            --primary-hover: #0056b3;
-            --background-color: #f7f9fa;
-            --border-color: #ddd;
-            --text-color: #333;
-            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
-
-        h1 {
-            color: var(--text-color);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 90%;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .table-wrapper {
-            width: 100%;
-            max-height: 900px;
-            overflow: auto;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-shadow: var(--shadow);
-            margin-top: 20px;
-            background: #fff;
-        }
-
-        #tableSchedule {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: 1000px;
-        }
-
-        #tableSchedule th, #tableSchedule td {
-            border: 1px solid var(--border-color);
-            min-width: 120px; 
-            padding: 12px; 
-            text-align: center;
-            font-size: 18px; 
-        }
-
-        label {
-            font-size: 18px; 
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 6px;
-        }
-
-        input[type="number"] {
-            font-size: 18px;
-            padding: 6px; 
-            margin: 6px 12px 6px 0; 
-            width: 100px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="checkbox"] {
-            transform: scale(1.4); 
-            margin-right: 10px; 
-            cursor: pointer;
-        }
-
-        .btn-group {
-            margin-top: 20px; 
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        button {
-            font-size: 18px; 
-            padding: 10px 20px; 
-            cursor: pointer;
-            border: none;
-            border-radius: 4px;
-            background-color: var(--primary-color);
-            color: #fff;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        #lblCurrentTime,
-        #lblCurrentStatus,
-        #lblNextStatus {
-            margin-top: 16px; 
-            font-size: 18px; 
-            color: #555;
-        }
-
-        #tableSchedule th {
-            background-color: #f0f0f0;
-            border-bottom: 2px solid #ccc;
-            font-weight: 600;
-            font-size: 18px; 
-        }
-
-        #tableSchedule tr:hover {
-            background-color: #fafafa;
-        }
-
-        .lightgray { background-color: lightgray; }
-        .lightgreen { background-color: lightgreen; }
-        .orange { background-color: orange; }
-        .yellow { background-color: yellow; }
-
-        .volume-control {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .volume-control label {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .volume-control input[type="range"] {
-            width: 200px;
-            margin-right: 10px;
-        }
-            .time-picker-container {
-        margin: 15px 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo Lịch Hút TPCG (Fix)</title>
+  <style>
+    :root {
+      --primary-color: #007BFF;
+      --primary-hover: #0056b3;
+      --background-color: #f7f9fa;
+      --border-color: #ddd;
+      --text-color: #333;
+      --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    
-    .time-picker-container label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 18px;
-        font-weight: 500;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background-color: var(--background-color); margin: 0; padding: 20px; line-height: 1.5; }
+    h1 { color: var(--text-color); text-align: center; margin-bottom: 30px; }
+    .container { max-width: 1000px; width: 90%; margin: 0 auto; background: #fff; border-radius: 8px; padding: 30px; box-shadow: var(--shadow); }
+    .table-wrapper { width: 100%; max-height: 900px; overflow: auto; border: 1px solid #ccc; border-radius: 4px; box-shadow: var(--shadow); margin-top: 20px; background: #fff; }
+    #tableSchedule { border-collapse: collapse; width: 100%; min-width: 1000px; }
+    #tableSchedule th, #tableSchedule td { border: 1px solid var(--border-color); min-width: 120px; padding: 12px; text-align: center; font-size: 18px; }
+    label { font-size: 18px; font-weight: 500; display: inline-block; margin-bottom: 6px; }
+    input[type="number"] { font-size: 18px; padding: 6px; margin: 6px 12px 6px 0; width: 120px; border: 1px solid #ccc; border-radius: 4px; }
+    input[type="checkbox"] { transform: scale(1.2); margin-right: 10px; cursor: pointer; }
+    .btn-group { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+    button { font-size: 18px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 4px; background-color: var(--primary-color); color: #fff; transition: background-color 0.2s; }
+    button:hover { background-color: var(--primary-hover); }
+    #lblCurrentTime, #lblCurrentStatus, #lblNextStatus { margin-top: 16px; font-size: 18px; color: #555; }
+    #tableSchedule th { background-color: #f0f0f0; border-bottom: 2px solid #ccc; font-weight: 600; font-size: 18px; }
+    #tableSchedule tr:hover { background-color: #fafafa; }
+    .lightgray { background-color: lightgray; }
+    .lightgreen { background-color: lightgreen; }
+    .orange { background-color: orange; }
+    .yellow { background-color: yellow; }
+    .volume-control { margin: 20px 0; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .time-picker-container { margin: 15px 0; }
+    .time-picker-container label { display: block; margin-bottom: 8px; font-size: 18px; font-weight: 500; }
+    .time-input-wrapper { position: relative; display: inline-block; }
+    .time-picker { font-size: 18px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; width: 150px; background-color: white; transition: border-color 0.3s; -webkit-appearance: none; -moz-appearance: none; }
+    .time-picker:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); }
+    @media (max-width: 768px) {
+      .time-picker { width: 100%; }
+      .container { width: 100%; padding: 15px; }
+      input[type="number"] { width: 100%; }
+      .btn-group { flex-direction: column; }
+      button { width: 100%; }
     }
-    
-    .time-input-wrapper {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .time-picker {
-        font-size: 18px;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 150px;
-        background-color: white;
-        transition: border-color 0.3s;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-    
-    .time-picker:focus {
-        outline: none;
-        border-color: var(--primary-color, #007BFF);
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-        @media (max-width: 768px) {
-        .time-picker {
-            width: 100%;
-        }
-            .container {
-                width: 100%;
-                padding: 15px;
-            }
-            
-            input[type="number"] {
-                width: 80px;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+  </style>
 </head>
 <body>
+  <h1>Tạo Lịch Hút TPCG</h1>
 
-    <h1>Tạo Lịch Hút TPCG</h1>
+  <!-- Âm báo -->
+  <audio id="alarmAudio" src="alarm_sound.mp3" preload="auto"></audio>
 
-    <!-- Âm báo -->
-    <audio id="alarmAudio" src="alarm_sound.mp3" preload="auto"></audio>
+  <!-- Favicon (tùy file thật sự có tồn tại) -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
 
-    <!-- Favicon cho các trình duyệt -->
-    <link rel="icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+  <div class="container">
+    <div>
+      <label for="numSamples">Số lượng mẫu:</label>
+      <input type="number" id="numSamples" min="1" placeholder="Số mẫu" />
 
-    <div class="container">
-        <!-- Khu vực nhập thông tin -->
-        <div>
-            <label for="numSamples">Số lượng mẫu:</label>
-            <input type="number" id="numSamples" min="1" placeholder="Số mẫu"/>
-
-            <br><br>
-
-            <label>Thời gian bắt đầu:</label>
-            <div class="time-picker-container">
-                <label for="timePicker">Thời gian bắt đầu:</label>
-                <div class="time-input-wrapper">
-                    <input type="time" id="timePicker" class="time-picker" value="16:05">
-                </div>
-            </div>
-
-            <br><br>
-
-            <input type="checkbox" id="chkTrungTg" />
-            <label for="chkTrungTg">Hút và phân tán cùng lúc</label>
-
-            <div class="btn-group">
-                <button id="btnGetCurrentTime">Lấy thời gian hiện tại</button>
-                <button id="btnCreateSchedule">Tạo Lịch</button>
-                <button id="btnReset">Reset</button>
-            </div>
+      <div class="time-picker-container">
+        <label for="timePicker">Thời gian bắt đầu:</label>
+        <div class="time-input-wrapper">
+          <input type="time" id="timePicker" class="time-picker" value="16:05" />
         </div>
-        
-        <!-- Khối điều khiển âm lượng (thanh trượt + nút Mute/Unmute) -->
-        <div class="volume-control">
-            <label for="volumeSlider">Âm lượng chuông báo:</label>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-            <button id="muteBtn">Mute</button>
-        </div>
-        
-        <!-- Hiển thị thời gian, trạng thái -->
-        <div id="lblCurrentTime">Thời gian hiện tại: --:--</div>
-        <div id="lblCurrentStatus">Trạng thái hiện tại: Không có</div>
-        <div id="lblNextStatus">Trạng thái tiếp theo: Không có</div>
+      </div>
 
-        <div class="table-wrapper">
-            <table id="tableSchedule">
-                <!-- Sẽ được tạo động trong JavaScript -->
-            </table>
-        </div>
+      <div style="margin: 10px 0;">
+        <input type="checkbox" id="chkTrungTg" />
+        <label for="chkTrungTg">Hút và phân tán cùng lúc</label>
+      </div>
+
+      <div class="btn-group">
+        <button id="btnGetCurrentTime">Lấy thời gian hiện tại</button>
+        <button id="btnCreateSchedule">Tạo Lịch</button>
+        <button id="btnReset">Reset</button>
+      </div>
     </div>
 
-    <script>
+    <div class="volume-control">
+      <label for="volumeSlider">Âm lượng chuông báo:</label>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" />
+      <button id="muteBtn">Mute</button>
+    </div>
+
+    <div id="lblCurrentTime">Thời gian hiện tại: --:--</div>
+    <div id="lblCurrentStatus">Trạng thái hiện tại: Không có</div>
+    <div id="lblNextStatus">Trạng thái tiếp theo: Không có</div>
+
+    <div class="table-wrapper">
+      <table id="tableSchedule"></table>
+    </div>
+  </div>
+
+  <script>
     (() => {
-        // Khai báo các hằng số
-        const STAGES = [
-            "Bắt đầu phân tán",
-            "Phân tán P1",
-            "Phân tán P2",
-            "Phân tán xong",
-            "Hút hạt cát",
-            "Hút limon thô",
-            "Hút limon mịn",
-            "Hút cấp sét"
-        ];
+      // ====== HẰNG SỐ ======
+      const STAGES = [
+        "Bắt đầu phân tán",
+        "Phân tán P1",
+        "Phân tán P2",
+        "Phân tán xong",
+        "Hút hạt cát",
+        "Hút limon thô",
+        "Hút limon mịn",
+        "Hút cấp sét"
+      ];
 
-        const FILTERED_ROWS = [0, 3, 4, 5, 6, 7];
-        const ROW_LABELS = [
-            "Bắt đầu phân tán",
-            "Phân tán xong",
-            "Hút hạt cát",
-            "Hút limon thô",
-            "Hút limon mịn",
-            "Hút cấp sét",
-        ];
+      // Chỉ render 6 hàng này trong bảng
+      const FILTERED_ROWS = [0, 3, 4, 5, 6, 7];
+      const ROW_LABELS = [
+        "Bắt đầu phân tán",
+        "Phân tán xong",
+        "Hút hạt cát",
+        "Hút limon thô",
+        "Hút limon mịn",
+        "Hút cấp sét",
+      ];
 
-        // Các biến toàn cục
-        let scheduleData = [];
-        let isScheduleCreated = false;
-        let updateIntervalId = null;
+      // ====== BIẾN TRẠNG THÁI ======
+      let scheduleData = [];
+      let isScheduleCreated = false;
+      let updateIntervalId = null;
 
-        // Lấy DOM elements
-        const elements = {
-            alarmAudio: document.getElementById('alarmAudio'),
-            volumeSlider: document.getElementById('volumeSlider'),
-            muteBtn: document.getElementById('muteBtn'),
-            numSamples: document.getElementById('numSamples'),
-            timePicker: document.getElementById('timePicker'),
-            chkTrungTg: document.getElementById('chkTrungTg'),
-            btnGetTime: document.getElementById('btnGetCurrentTime'),
-            btnCreate: document.getElementById('btnCreateSchedule'),
-            btnReset: document.getElementById('btnReset'),
-            lblCurrentTime: document.getElementById('lblCurrentTime'),
-            lblCurrentStatus: document.getElementById('lblCurrentStatus'),
-            lblNextStatus: document.getElementById('lblNextStatus'),
-            tableSchedule: document.getElementById('tableSchedule')
+      // ====== DOM ======
+      const el = {
+        alarmAudio: document.getElementById('alarmAudio'),
+        volumeSlider: document.getElementById('volumeSlider'),
+        muteBtn: document.getElementById('muteBtn'),
+        numSamples: document.getElementById('numSamples'),
+        timePicker: document.getElementById('timePicker'),
+        chkTrungTg: document.getElementById('chkTrungTg'),
+        btnGetTime: document.getElementById('btnGetCurrentTime'),
+        btnCreate: document.getElementById('btnCreateSchedule'),
+        btnReset: document.getElementById('btnReset'),
+        lblCurrentTime: document.getElementById('lblCurrentTime'),
+        lblCurrentStatus: document.getElementById('lblCurrentStatus'),
+        lblNextStatus: document.getElementById('lblNextStatus'),
+        tableSchedule: document.getElementById('tableSchedule')
+      };
+
+      // ====== ÂM LƯỢNG ======
+      el.volumeSlider.addEventListener('input', function () {
+        el.alarmAudio.volume = parseFloat(this.value);
+      });
+      el.muteBtn.addEventListener('click', function () {
+        el.alarmAudio.muted = !el.alarmAudio.muted;
+        this.textContent = el.alarmAudio.muted ? 'Unmute' : 'Mute';
+      });
+
+      // ====== TIỆN ÍCH THỜI GIAN ======
+      const getNow = () => new Date();
+      const formatFullDate = (d) => (
+        d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) +
+        ' - ' +
+        d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      );
+      const formatHM = (d) => d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+      const addMinutes = (d, m) => new Date(d.getTime() + m * 60000);
+      const isSameSecond = (d1, d2) => Math.abs(d1 - d2) < 1000;
+      function parseFullTimeString(str) {
+        if (!str || typeof str !== 'string') return null;
+        try {
+          const [hm, dmy] = str.split(' - ');
+          if (!hm || !dmy) return null;
+          const [H, M] = hm.split(':').map(n => parseInt(n, 10));
+          const [dd, mm, yyyy] = dmy.split('/').map(n => parseInt(n, 10));
+          return new Date(yyyy, mm - 1, dd, H, M);
+        } catch (e) {
+          console.error('Parse time error:', e);
+          return null;
+        }
+      }
+
+      // ====== TÍNH TOÁN LỊCH ======
+      function calculateTimes(startTime) {
+        const p1 = addMinutes(startTime, 1);
+        const p2 = addMinutes(startTime, 2);
+        const pxong = addMinutes(startTime, 3);
+        const times = {
+          startTime,
+          p1,
+          p2,
+          pxong,
+          hut_sa: addMinutes(pxong, 2),
+          hut_lt: addMinutes(pxong, 15),
+          hut_lm: addMinutes(pxong, 69),
+          hut_s: addMinutes(pxong, 1206)
         };
+        return times;
+      }
 
-        /*****************************************************
-         * Điều khiển volume & Mute/Unmute
-         *****************************************************/
-        // Lắng nghe thanh trượt âm lượng
-        elements.volumeSlider.addEventListener('input', function() {
-            elements.alarmAudio.volume = parseFloat(this.value);
-        });
+      function generateSampleSchedule(startTime, isTrungTg) {
+        const t = calculateTimes(startTime);
+        const nextStartTime = addMinutes(startTime, isTrungTg ? 4 : 6);
+        const arr = [
+          formatFullDate(t.startTime),
+          formatFullDate(t.p1),
+          formatFullDate(t.p2),
+          formatFullDate(t.pxong),
+          formatFullDate(t.hut_sa),
+          formatFullDate(t.hut_lt),
+          formatFullDate(t.hut_lm),
+          formatFullDate(t.hut_s)
+        ];
+        return [arr, nextStartTime];
+      }
 
-        // Nút Mute/Unmute
-        elements.muteBtn.addEventListener('click', function() {
-            elements.alarmAudio.muted = !elements.alarmAudio.muted;
-            this.textContent = elements.alarmAudio.muted ? "Unmute" : "Mute";
-        });
-
-        /*****************************************************
-         * Phần JS mô phỏng lại logic PyQt5 ban đầu
-         *****************************************************/
-        function adjustTime() {
-            let hour = parseInt(elements.startHour.value) || 0;
-            let minute = parseInt(elements.startMinute.value) || 0;
-
-            if (minute < 0) {
-                minute += 60;
-                hour -= 1;
-            } else if (minute >= 60) {
-                minute -= 60;
-                hour += 1;
-            }
-
-            hour = (hour < 0) ? 23 : (hour >= 24) ? 0 : hour;
-
-            elements.startHour.value = hour;
-            elements.startMinute.value = minute;
+      function createSchedule() {
+        const n = parseInt(el.numSamples.value, 10) || 0;
+        if (n <= 0) {
+          alert('Vui lòng nhập số lượng mẫu hợp lệ');
+          resetSchedule();
+          return;
         }
-
-        elements.startHour.addEventListener('change', adjustTime);
-        elements.startMinute.addEventListener('change', adjustTime);
-
-        /*****************************************************
-         * Hàm tiện ích xử lý Date
-         *****************************************************/
-        function getNowDate() {
-            return new Date();
-        }
-
-        function formatFullDate(dateObj) {
-            return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) + 
-                   ' - ' + 
-                   dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function formatHourMinute(dateObj) {
-            return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
-        }
-
-        function addMinutes(dateObj, minutes) {
-            return new Date(dateObj.getTime() + minutes * 60000);
-        }
-
-        function isSameDateTime(d1, d2) {
-            return Math.abs(d1 - d2) < 1000; // Sai lệch dưới 1 giây
-        }
-
-        function parseFullTimeString(str) {
-            if (!str || typeof str !== 'string') return null;
-            
-            try {
-                let parts = str.split(" - ");
-                if (parts.length !== 2) return null;
-                
-                let hm = parts[0];
-                let dmy = parts[1];
-
-                let hmArr = hm.split(":");
-                if (hmArr.length !== 2) return null;
-                let H = parseInt(hmArr[0]);
-                let M = parseInt(hmArr[1]);
-
-                let dmyArr = dmy.split("/");
-                if (dmyArr.length !== 3) return null;
-                let dd = parseInt(dmyArr[0]);
-                let mm = parseInt(dmyArr[1]) - 1;
-                let yyyy = parseInt(dmyArr[2]);
-
-                return new Date(yyyy, mm, dd, H, M);
-            } catch (e) {
-                console.error("Lỗi khi parse thời gian:", e);
-                return null;
-            }
-        }
-
-        /*****************************************************
-         * Hàm mô phỏng tính toán thời gian
-         *****************************************************/
-        function calculateTimes(startTime) {
-            // Tính toán thời gian phân tán
-            const p1 = addMinutes(startTime, 1);
-            const p2 = addMinutes(startTime, 2);
-            const pxong = addMinutes(startTime, 3);
-            
-            // Tính toán thời gian hút
-            const hutTimes = {
-                hut_sa: addMinutes(pxong, 2),
-                hut_lt: addMinutes(pxong, 15),
-                hut_lm: addMinutes(pxong, 69),
-                hut_s: addMinutes(pxong, 1206)
-            };
-            
-            return {
-                startTime,
-                p1,
-                p2,
-                pxong,
-                ...hutTimes
-            };
-        }
-
-        function generateSampleSchedule(startTime, isTrungTg) {
-            const times = calculateTimes(startTime);
-            
-            const nextStartTime = addMinutes(startTime, (isTrungTg ? 4 : 6));
-
-            const arr = [
-                formatFullDate(times.startTime),
-                formatFullDate(times.p1),
-                formatFullDate(times.p2),
-                formatFullDate(times.pxong),
-                formatFullDate(times.hut_sa),
-                formatFullDate(times.hut_lt),
-                formatFullDate(times.hut_lm),
-                formatFullDate(times.hut_s)
-            ];
-
-            return [arr, nextStartTime];
-        }
-
-        /*****************************************************
-         * Hàm tạo lịch
-         *****************************************************/
-        function createSchedule() {
-            const numsOfSample = parseInt(elements.numSamples.value) || 0;
-            if (numsOfSample <= 0) {
-                alert("Vui lòng nhập số lượng mẫu hợp lệ");
-                resetSchedule();
-                return;
-            }
-            
-        const timeValue = elements.timePicker.value; // Format: "HH:MM"
-        const [sHour, sMin] = timeValue.split(':').map(num => parseInt(num));
-        
-        const isTrungTg = elements.chkTrungTg.checked;
-        const now = getNowDate();
+        const timeValue = el.timePicker.value; // HH:MM
+        const [sHour, sMin] = timeValue.split(':').map(v => parseInt(v, 10));
+        const isTrungTg = el.chkTrungTg.checked;
+        const now = getNow();
         let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
-      
 
-            const now = getNowDate();
-            let startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sHour, sMin);
-
-            let results = [];
-            let tempTime = startTime;
-
-            for (let i = 0; i < numsOfSample; i++) {
-                let [sampleArr, nextT] = generateSampleSchedule(tempTime, isTrungTg);
-                results.push(sampleArr);
-                tempTime = nextT;
-            }
-
-            if (results.length === 0) {
-                resetSchedule();
-                return;
-            }
-
-            // Chuyển đổi dữ liệu sang dạng matrix
-            const rowCount = STAGES.length;
-            const colCount = results.length;
-
-            scheduleData = Array(rowCount).fill().map(() => Array(colCount).fill(""));
-            for (let c = 0; c < colCount; c++) {
-                for (let r = 0; r < rowCount; r++) {
-                    scheduleData[r][c] = results[c][r];
-                }
-            }
-
-            isScheduleCreated = true;
-            renderScheduleTable();
-            
-            // Bắt đầu cập nhật định kỳ nếu chưa có
-            if (!updateIntervalId) {
-                updateIntervalId = setInterval(updateUIEverySecond, 1000);
-            }
+        const results = [];
+        let temp = startTime;
+        for (let i = 0; i < n; i++) {
+          const [sampleArr, nextT] = generateSampleSchedule(temp, isTrungTg);
+          results.push(sampleArr);
+          temp = nextT;
         }
+        if (!results.length) { resetSchedule(); return; }
 
-        /*****************************************************
-         * Hàm hiển thị bảng schedule
-         *****************************************************/
-        function renderScheduleTable() {
-            elements.tableSchedule.innerHTML = "";
-
-            if (!isScheduleCreated || !scheduleData.length) {
-                return;
-            }
-
-            const colCount = scheduleData[0].length;
-            const fragment = document.createDocumentFragment();
-            
-            // Tạo header
-            const thead = document.createElement('thead');
-            const trHead = document.createElement('tr');
-            
-            // Ô rỗng đầu tiên
-            trHead.appendChild(document.createElement('th'));
-            
-            // Tạo các ô header cho từng mẫu
-            for (let c = 0; c < colCount; c++) {
-                const th = document.createElement('th');
-                th.textContent = `Mẫu ${c+1}`;
-                trHead.appendChild(th);
-            }
-            
-            thead.appendChild(trHead);
-            fragment.appendChild(thead);
-
-            // Tạo body
-            const tbody = document.createElement('tbody');
-            
-            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-                const actualRow = FILTERED_ROWS[rIndex];
-                const tr = document.createElement('tr');
-                
-                // Tạo ô label
-                const tdLabel = document.createElement('td');
-                tdLabel.textContent = ROW_LABELS[rIndex];
-                tr.appendChild(tdLabel);
-
-                // Tạo các ô dữ liệu
-                for (let c = 0; c < colCount; c++) {
-                    const td = document.createElement('td');
-                    const fullTimeStr = scheduleData[actualRow][c];
-                    const dateObj = parseFullTimeString(fullTimeStr);
-                    
-                    td.textContent = dateObj ? formatHourMinute(dateObj) : fullTimeStr;
-                    tr.appendChild(td);
-                }
-                
-                tbody.appendChild(tr);
-            }
-            
-            fragment.appendChild(tbody);
-            elements.tableSchedule.appendChild(fragment);
+        const rowCount = STAGES.length;
+        const colCount = results.length;
+        scheduleData = Array.from({ length: rowCount }, () => Array(colCount).fill(''));
+        for (let c = 0; c < colCount; c++) {
+          for (let r = 0; r < rowCount; r++) {
+            scheduleData[r][c] = results[c][r];
+          }
         }
+        isScheduleCreated = true;
+        renderScheduleTable();
+        if (!updateIntervalId) updateIntervalId = setInterval(updateUIEverySecond, 1000);
+      }
 
-        /*****************************************************
-         * Cập nhật UI mỗi giây
-         *****************************************************/
-        function updateUIEverySecond() {
-            const now = getNowDate();
-            elements.lblCurrentTime.textContent = "Thời gian hiện tại: " +
-                now.toLocaleTimeString('vi-VN', { hour12: false });
+      function renderScheduleTable() {
+        el.tableSchedule.innerHTML = '';
+        if (!isScheduleCreated || !scheduleData.length) return;
+        const colCount = scheduleData[0].length;
+        const frag = document.createDocumentFragment();
 
-            if (!isScheduleCreated) return;
-            
-            updateTableColor(now);
-            updateCurrentStage(now);
-            updateNextStage(now);
-            checkAlarm(now);
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        trHead.appendChild(document.createElement('th'));
+        for (let c = 0; c < colCount; c++) {
+          const th = document.createElement('th');
+          th.textContent = `Mẫu ${c + 1}`;
+          trHead.appendChild(th);
         }
+        thead.appendChild(trHead);
+        frag.appendChild(thead);
 
-        function updateTableColor(now) {
-            if (!isScheduleCreated || !scheduleData.length) return;
-            
-            const colCount = scheduleData[0].length;
-            const futureStages = [];
-
-            const trs = elements.tableSchedule.querySelector('tbody')?.querySelectorAll('tr') || [];
-            if (!trs.length) return;
-
-            // Tìm các giai đoạn tương lai và sắp xếp theo thời gian
-            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-                const actualRow = FILTERED_ROWS[rIndex];
-                
-                for (let c = 0; c < colCount; c++) {
-                    const cellValue = scheduleData[actualRow][c];
-                    const dateObj = parseFullTimeString(cellValue);
-
-                    if (dateObj && dateObj > now) {
-                        futureStages.push({
-                            rowIdx: rIndex,
-                            colIdx: c,
-                            dateObj: dateObj
-                        });
-                    }
-                }
-            }
-
-            futureStages.sort((a, b) => a.dateObj - b.dateObj);
-            const next3 = futureStages.slice(0, 3);
-
-            const orangeStage = (next3.length > 0) ? {r: next3[0].rowIdx, c: next3[0].colIdx} : null;
-            const yellowStages = new Set();
-            
-            if (next3.length > 1) {
-                for (let i = 1; i < next3.length; i++) {
-                    yellowStages.add(`${next3[i].rowIdx},${next3[i].colIdx}`);
-                }
-            }
-
-            // Cập nhật màu sắc cho các ô
-            for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
-                const tr = trs[rIndex];
-                if (!tr) continue;
-                
-                const actualRow = FILTERED_ROWS[rIndex];
-                const tds = tr.querySelectorAll('td');
-                
-                for (let c = 1; c <= colCount; c++) {
-                    const td = tds[c];
-                    if (!td) continue;
-                    
-                    const cellValue = scheduleData[actualRow][c-1];
-                    const dateObj = parseFullTimeString(cellValue);
-
-                    // Reset class
-                    td.className = "";
-
-                    if (dateObj) {
-                        if (dateObj <= now) {
-                            // Giai đoạn đã qua
-                            const diffSec = (now - dateObj) / 1000;
-                            td.classList.add(diffSec >= 60 ? 'lightgray' : 'lightgreen');
-                        } else {
-                            // Giai đoạn sắp tới
-                            if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c-1)) {
-                                td.classList.add('orange');
-                            } else if (yellowStages.has(`${rIndex},${c-1}`)) {
-                                td.classList.add('yellow');
-                            }
-                        }
-                    }
-                }
-            }
+        const tbody = document.createElement('tbody');
+        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+          const actualRow = FILTERED_ROWS[rIndex];
+          const tr = document.createElement('tr');
+          const tdLabel = document.createElement('td');
+          tdLabel.textContent = ROW_LABELS[rIndex];
+          tr.appendChild(tdLabel);
+          for (let c = 0; c < colCount; c++) {
+            const td = document.createElement('td');
+            const fullTimeStr = scheduleData[actualRow][c];
+            const d = parseFullTimeString(fullTimeStr);
+            td.textContent = d ? formatHM(d) : fullTimeStr;
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
         }
+        frag.appendChild(tbody);
+        el.tableSchedule.appendChild(frag);
+      }
 
-        function updateCurrentStage(now) {
-            if (!scheduleData.length) {
-                elements.lblCurrentStatus.textContent = "Trạng thái hiện tại: Không có";
-                return;
-            }
+      function updateUIEverySecond() {
+        const now = getNow();
+        el.lblCurrentTime.textContent = 'Thời gian hiện tại: ' + now.toLocaleTimeString('vi-VN', { hour12: false });
+        if (!isScheduleCreated) return;
+        updateTableColor(now);
+        updateCurrentStage(now);
+        updateNextStage(now);
+        checkAlarm(now);
+      }
 
-            const matching = [];
-            const colCount = scheduleData[0].length;
-            const rowCount = scheduleData.length;
+      function updateTableColor(now) {
+        if (!isScheduleCreated || !scheduleData.length) return;
+        const colCount = scheduleData[0].length;
+        const future = [];
+        const trs = el.tableSchedule.querySelector('tbody')?.querySelectorAll('tr') || [];
+        if (!trs.length) return;
 
-            for (let c = 0; c < colCount; c++) {
-                const sampleName = `Mẫu ${c + 1}`;
-                
-                for (let r = 0; r < rowCount; r++) {
-                    const fullTimeStr = scheduleData[r][c];
-                    const dateObj = parseFullTimeString(fullTimeStr);
-                    
-                    if (dateObj && dateObj <= now) {
-                        const diffSec = (now - dateObj) / 1000;
-                        
-                        if (diffSec <= 60) {
-                            let stageName = STAGES[r];
-                            
-                            // Gộp các giai đoạn phân tán
-                            if (["Phân tán P1", "Phân tán P2"].includes(stageName)) {
-                                stageName = "Đang phân tán";
-                            }
-                            
-                            matching.push(`${stageName} - ${sampleName}`);
-                        }
-                    }
-                }
-            }
-
-            elements.lblCurrentStatus.textContent = matching.length > 0 
-                ? "Trạng thái hiện tại: " + matching.join(", ")
-                : "Trạng thái hiện tại: Không có";
+        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+          const actualRow = FILTERED_ROWS[rIndex];
+          for (let c = 0; c < colCount; c++) {
+            const cellVal = scheduleData[actualRow][c];
+            const d = parseFullTimeString(cellVal);
+            if (d && d > now) future.push({ rowIdx: rIndex, colIdx: c, dateObj: d });
+          }
         }
+        future.sort((a, b) => a.dateObj - b.dateObj);
+        const next3 = future.slice(0, 3);
+        const orangeStage = next3[0] ? { r: next3[0].rowIdx, c: next3[0].colIdx } : null;
+        const yellowStages = new Set(next3.slice(1).map(x => `${x.rowIdx},${x.colIdx}`));
 
-        function updateNextStage(now) {
-            if (!scheduleData.length) {
-                elements.lblNextStatus.textContent = "Trạng thái tiếp theo: Không có";
-                return;
+        for (let rIndex = 0; rIndex < FILTERED_ROWS.length; rIndex++) {
+          const tr = trs[rIndex];
+          if (!tr) continue;
+          const actualRow = FILTERED_ROWS[rIndex];
+          const tds = tr.querySelectorAll('td');
+          for (let c = 1; c <= colCount; c++) {
+            const td = tds[c];
+            if (!td) continue;
+            const cellVal = scheduleData[actualRow][c - 1];
+            const d = parseFullTimeString(cellVal);
+            td.className = '';
+            if (d) {
+              if (d <= now) {
+                const diffSec = (now - d) / 1000;
+                td.classList.add(diffSec >= 60 ? 'lightgray' : 'lightgreen');
+              } else {
+                if (orangeStage && orangeStage.r === rIndex && orangeStage.c === (c - 1)) td.classList.add('orange');
+                else if (yellowStages.has(`${rIndex},${c - 1}`)) td.classList.add('yellow');
+              }
             }
+          }
+        }
+      }
 
-            const nextArr = [];
-            const colCount = scheduleData[0].length;
-            const rowCount = scheduleData.length;
-
-            for (let c = 0; c < colCount; c++) {
-                const sampleName = `Mẫu ${c+1}`;
-                
-                for (let r = 0; r < rowCount; r++) {
-                    const stageName = STAGES[r];
-                    
-                    // Bỏ qua giai đoạn Phân tán P1 và P2
-                    if (stageName === "Phân tán P1" || stageName === "Phân tán P2") continue;
-                    
-                    const fullTimeStr = scheduleData[r][c];
-                    const dateObj = parseFullTimeString(fullTimeStr);
-                    
-                    if (dateObj && dateObj > now) {
-                        const diffSec = (dateObj - now) / 1000;
-                        
-                        if (diffSec < 60) {
-                            nextArr.push({
-                                dateObj: dateObj,
-                                text: `${stageName} - ${sampleName} (${Math.floor(diffSec)} sec)`
-                            });
-                        } else {
-                            const diffMin = Math.floor(diffSec / 60);
-                            nextArr.push({
-                                dateObj: dateObj,
-                                text: `${stageName} - ${sampleName} (${diffMin} min)`
-                            });
-                        }
-                    }
-                }
+      function updateCurrentStage(now) {
+        if (!scheduleData.length) { el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có'; return; }
+        const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const matches = [];
+        for (let c = 0; c < colCount; c++) {
+          const sampleName = `Mẫu ${c + 1}`;
+          for (let r = 0; r < rowCount; r++) {
+            const full = scheduleData[r][c];
+            const d = parseFullTimeString(full);
+            if (d && d <= now) {
+              const diff = (now - d) / 1000;
+              if (diff <= 60) {
+                let stage = STAGES[r];
+                if (stage === 'Phân tán P1' || stage === 'Phân tán P2') stage = 'Đang phân tán';
+                matches.push(`${stage} - ${sampleName}`);
+              }
             }
-            
-            nextArr.sort((a, b) => a.dateObj - b.dateObj);
-            const topNextArr = nextArr.slice(0, 3).map(item => item.text);
-
-            elements.lblNextStatus.textContent = topNextArr.length > 0
-                ? "Trạng thái tiếp theo: " + topNextArr.join(", ")
-                : "Trạng thái tiếp theo: Không có";
+          }
         }
+        el.lblCurrentStatus.textContent = matches.length ? 'Trạng thái hiện tại: ' + matches.join(', ') : 'Trạng thái hiện tại: Không có';
+      }
 
-        function checkAlarm(now) {
-            if (!scheduleData.length) return;
-
-            const colCount = scheduleData[0].length;
-            const rowCount = scheduleData.length;
-
-            for (let c = 0; c < colCount; c++) {
-                for (let r = 0; r < rowCount; r++) {
-                    const stageName = STAGES[r];
-                    
-                    // Bỏ qua các giai đoạn phân tán P1, P2
-                    if (stageName === "Phân tán P1" || stageName === "Phân tán P2") continue;
-                    
-                    const fullTimeStr = scheduleData[r][c];
-                    const dateObj = parseFullTimeString(fullTimeStr);
-                    
-                    if (dateObj && isSameDateTime(dateObj, now)) {
-                        playAlarm();
-                        return;
-                    }
-                }
+      function updateNextStage(now) {
+        if (!scheduleData.length) { el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có'; return; }
+        const colCount = scheduleData[0].length; const rowCount = scheduleData.length; const nextArr = [];
+        for (let c = 0; c < colCount; c++) {
+          const sampleName = `Mẫu ${c + 1}`;
+          for (let r = 0; r < rowCount; r++) {
+            const stage = STAGES[r];
+            if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
+            const full = scheduleData[r][c];
+            const d = parseFullTimeString(full);
+            if (d && d > now) {
+              const diffSec = (d - now) / 1000;
+              const text = diffSec < 60
+                ? `${stage} - ${sampleName} (${Math.floor(diffSec)} sec)`
+                : `${stage} - ${sampleName} (${Math.floor(diffSec / 60)} min)`;
+              nextArr.push({ dateObj: d, text });
             }
+          }
         }
+        nextArr.sort((a, b) => a.dateObj - b.dateObj);
+        const top = nextArr.slice(0, 3).map(x => x.text);
+        el.lblNextStatus.textContent = top.length ? 'Trạng thái tiếp theo: ' + top.join(', ') : 'Trạng thái tiếp theo: Không có';
+      }
 
-        function playAlarm() {
-            // Tránh phát nhiều lần
-            if (elements.alarmAudio.paused) {
-                elements.alarmAudio.currentTime = 0;
-                elements.alarmAudio.play();
-                
-                setTimeout(() => {
-                    elements.alarmAudio.pause();
-                    elements.alarmAudio.currentTime = 0;
-                }, 5000);
-            }
+      function checkAlarm(now) {
+        if (!scheduleData.length) return;
+        const colCount = scheduleData[0].length; const rowCount = scheduleData.length;
+        for (let c = 0; c < colCount; c++) {
+          for (let r = 0; r < rowCount; r++) {
+            const stage = STAGES[r];
+            if (stage === 'Phân tán P1' || stage === 'Phân tán P2') continue;
+            const full = scheduleData[r][c];
+            const d = parseFullTimeString(full);
+            if (d && isSameSecond(d, now)) { playAlarm(); return; }
+          }
         }
+      }
 
-        function resetSchedule() {
-            scheduleData = [];
-            isScheduleCreated = false;
-            renderScheduleTable();
-            elements.lblCurrentStatus.textContent = "Trạng thái hiện tại: Không có";
-            elements.lblNextStatus.textContent = "Trạng thái tiếp theo: Không có";
+      function playAlarm() {
+        if (el.alarmAudio.paused) {
+          el.alarmAudio.currentTime = 0;
+          // Một số trình duyệt cần thao tác người dùng trước khi play audio
+          el.alarmAudio.play().catch(() => {});
+          setTimeout(() => { el.alarmAudio.pause(); el.alarmAudio.currentTime = 0; }, 5000);
         }
+      }
 
-        /*****************************************************
-         * Event Handlers
-         *****************************************************/
-        elements.btnGetTime.addEventListener('click', () => {
-        const now = getNowDate();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        elements.timePicker.value = `${hours}:${minutes}`;
-        });
+      function resetSchedule() {
+        scheduleData = [];
+        isScheduleCreated = false;
+        el.tableSchedule.innerHTML = '';
+        el.lblCurrentStatus.textContent = 'Trạng thái hiện tại: Không có';
+        el.lblNextStatus.textContent = 'Trạng thái tiếp theo: Không có';
+      }
 
-        elements.btnCreate.addEventListener('click', createSchedule);
-
-        elements.btnReset.addEventListener('click', () => {
-        elements.numSamples.value = "";
-        elements.timePicker.value = "00:00";
-        elements.chkTrungTg.checked = false;
+      // ====== SỰ KIỆN ======
+      el.btnGetTime.addEventListener('click', () => {
+        const now = getNow();
+        el.timePicker.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      });
+      el.btnCreate.addEventListener('click', createSchedule);
+      el.btnReset.addEventListener('click', () => {
+        el.numSamples.value = '';
+        el.timePicker.value = '00:00';
+        el.chkTrungTg.checked = false;
         resetSchedule();
-        });
+      });
 
-        // Khởi tạo cập nhật UI ngay khi trang tải xong
-        updateUIEverySecond();
-        updateIntervalId = setInterval(updateUIEverySecond, 1000);
-
-        // Khởi tạo giá trị mặc định cho ô âm lượng
-        elements.alarmAudio.volume = elements.volumeSlider.value;
+      // ====== KHỞI TẠO ======
+      updateUIEverySecond();
+      updateIntervalId = setInterval(updateUIEverySecond, 1000);
+      el.alarmAudio.volume = parseFloat(el.volumeSlider.value);
     })();
-    </script>
+  </script>
 </body>
 </html>
